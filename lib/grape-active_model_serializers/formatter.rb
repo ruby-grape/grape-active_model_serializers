@@ -4,9 +4,11 @@ module Grape
   module Formatter
     module ActiveModelSerializers
       class << self
-
+        attr_accessor :infer_serializers
         attr_reader :env
         attr_reader :endpoint
+
+        ActiveModelSerializers.infer_serializers = true
 
         def call(object, env)
           @object = object
@@ -22,19 +24,17 @@ module Grape
         end
 
         private
-        def active_model_serializer
-          _active_model_serializer
-        end
 
         def active_model_serializer?
           !!active_model_serializer
         end
 
-        def _active_model_serializer
+        def active_model_serializer
           route_options = endpoint.options[:route_options]
-
           # Infer serializer name if its not set
-          route_options[:serializer] = @object.class.name unless route_options.has_key? :serializer
+          if self.infer_serializers
+            route_options[:serializer] = @object.class.name unless route_options.has_key? :serializer
+          end
 
           serializer = route_options[:serializer]
 
