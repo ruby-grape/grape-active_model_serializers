@@ -26,7 +26,6 @@ describe Grape::ActiveModelSerializers do
     last_response.body.should == "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
   end
 
-
   it "should respond with proper content-type" do
     subject.get("/home", :serializer => "user") do
       {user: {first_name: "JR", last_name: "HE"}}

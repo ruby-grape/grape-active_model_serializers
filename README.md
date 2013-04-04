@@ -47,7 +47,6 @@ See [active_model_serializers](https://github.com/rails-api/active_model_seriali
 
 grape-active_model_serializers will search for serializers for the objects returned by your grape API.
 
-Serializer
 ```ruby
 namespace :users do
   get ":id" do
@@ -67,7 +66,7 @@ Grape::Formatter::ActiveModelSerializers.infer_serializers = false
 
 ### Manually specifying a serializer
 
-Serializers can be specified at a route level by with the serializer option. A serializer can be specified with its class name or by name as string/symbol. The following are equivalent:
+Serializers can be specified at a route level by with the serializer option. A serializer can be specified by passing the the serializer class or the serializer name. The following are equivalent:
 
 ```ruby
 get "/home", :serializer => HomeSerializer
@@ -75,29 +74,32 @@ get "/home", :serializer => HomeSerializer
 ```
 ```ruby
 get "/home", :serializer => "home"
-
+...
 ```
 ```ruby
 get "/home", :serializer => :home
+...
 ```
 
 
 ### Example
 
 ```ruby
-# user.rb
-class User
-  include ActiveModel::SerializerSupport
-
-  attributes :first_name, :last_name, :email
+class User < ActiveRecord::Base
+  attr_accessor :first_name, :last_name, :password, :email
 end
-```
 
-```ruby
-# user_serializer.rb
 class UserSerializer < ActiveModel::Serializer
   attributes :first_name, :last_name
 end
+
+class API < Grape::API
+  get("/home") do
+    User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
+  end
+end
+
+API.new.get "/home" # => '{:user=>{:first_name=>"JR", :last_name=>"HE"}}'
 ```
 
 
