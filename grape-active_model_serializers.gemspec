@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["contact@jrhe.co.uk"]
   gem.description   = %q{Use active_model_serializer in grape}
   gem.summary       = %q{Use active_model_serializer in grape}
-  gem.homepage      = "https://github.com/jrhe/grape-rabl"
+  gem.homepage      = "https://github.com/jrhe/grape-active_model_serializers"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")

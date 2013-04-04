@@ -36,7 +36,7 @@ describe Grape::ActiveModelSerializers do
 
   it "should infer serializer when there is no serializer set" do
     subject.get("/home") do
-        User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
+      User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
     end
 
     get "/home"
@@ -50,7 +50,7 @@ describe Grape::ActiveModelSerializers do
 
     it "should NOT infer serializer when there is no serializer set" do
       subject.get("/home") do
-          User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
+        User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
       end
 
       get "/home"
