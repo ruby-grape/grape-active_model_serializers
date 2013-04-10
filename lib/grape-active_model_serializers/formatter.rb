@@ -1,4 +1,5 @@
 require 'active_record'
+require 'pry'
 
 module Grape
   module Formatter
@@ -10,39 +11,52 @@ module Grape
 
         ActiveModelSerializers.infer_serializers = true
 
-        def call(object, env)
-          @object = object
-          @env = env
-          @endpoint = env['api.endpoint']
+        def call(resource, env)
+          # @object = object
+          options = env['api.endpoint'].options[:route_options]
 
-          if object.is_a? ActiveRecord::Base and active_model_serializer?
-            options = endpoint.options[:route_options][:serializer_options] || {}
-            active_model_serializer.new(object).as_json options
+          serializer = serializer(endpoint, resource, options)
+
+          if serializer
+            serializer.to_json
           else
-            Grape::Formatter::Json.call object, env
+            Grape::Formatter::Json.call resource, env
           end
         end
+
+        #   options = endpoint.options[:route_options][:serializer_options] || {}
+        #   serializer.new(object, options).to_json
+        # end
 
         private
 
-        def active_model_serializer?
-          !!active_model_serializer
-        end
+        def serializer(endpoint, resource, options)
+          # default_options = controller.send(:default_serializer_options) || {}
+          options = {} #default_options.merge(options || {})
 
-        def active_model_serializer
-          route_options = endpoint.options[:route_options]
-          # Infer serializer name if its not set
-          if self.infer_serializers
-            route_options[:serializer] = @object.class.name unless route_options.has_key? :serializer
+          serializer = options.delete(:serializer) ||
+            (resource.respond_to?(:active_model_serializer) &&
+             resource.active_model_serializer)
+
+          return serializer unless serializer
+
+          if resource.respond_to?(:to_ary)
+            unless serializer <= ActiveModel::ArraySerializer
+              raise ArgumentError.new("#{serializer.name} is not an ArraySerializer. " +
+                                      "You may want to use the :each_serializer option instead.")
+            end
+
+            if options[:root] != false && serializer.root != false
+              # the serializer for an Array is ActiveModel::ArraySerializer
+              options[:root] ||= serializer.root || resource.first.class.name.downcase.pluralize
+            end
           end
 
-          serializer = route_options[:serializer]
+          # options[:scope] = controller.serialization_scope unless options.has_key?(:scope)
+          # options[:scope_name] = controller._serialization_scope
+          # options[:url_options] = controller.url_options
 
-          if serializer.instance_of? String or serializer.instance_of? Symbol
-            name = "#{serializer.to_s.camelize}Serializer"
-            serializer = Kernel.const_get(name)
-          end
-          serializer
+          serializer.new(resource, options)
         end
       end
     end
