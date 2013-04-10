@@ -27,10 +27,10 @@ describe Grape::ActiveModelSerializers do
   end
 
   it "should respond with proper content-type" do
-    subject.get("/home", :serializer => "user") do
+    subject.get("/home/users", :serializer => "user") do
       {user: {first_name: "JR", last_name: "HE"}}
     end
-    get("/home")
+    get("/home/users")
     last_response.headers["Content-Type"].should == "application/json"
   end
 
@@ -40,33 +40,30 @@ describe Grape::ActiveModelSerializers do
     end
 
     get "/home"
-    last_response.body.should == '{:user=>{:first_name=>"JR", :last_name=>"HE"}}'
+    last_response.body.should == "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
   end
 
-  context "serializer inference is disabled" do
-    before do
-      Grape::Formatter::ActiveModelSerializers.infer_serializers = false
+  it "should serializer arrays of objects" do
+    subject.get("/home") do
+      user = User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
+      [user, user]
     end
 
-    it "should NOT infer serializer when there is no serializer set" do
-      subject.get("/home") do
-        User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
-      end
-
-      get "/home"
-      last_response.body.should == "{\"user\":{\"created_at\":null,\"first_name\":\"JR\",\"id\":null,\"last_name\":\"HE\",\"updated_at\":null,\"username\":null}}"
-    end
+    get "/home"
+    last_response.body.should == "{\"users\":[{\"first_name\":\"JR\",\"last_name\":\"HE\"},{\"first_name\":\"JR\",\"last_name\":\"HE\"}]}"
   end
 
-  [UserSerializer, 'user', :user].each do |serializer|
-    it "should render using serializer (#{serializer})" do
-      subject.get("/home", serializer: serializer) do
-        User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
-      end
+  # [User2Serializer, 'user2', :user2].each do |serializer|
+  #   it "should render using serializer (#{serializer})" do
+  #     subject.get("/home", serializer: serializer) do
+  #       User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
+  #     end
 
-      get "/home"
-      last_response.body.should == '{:user=>{:first_name=>"JR", :last_name=>"HE"}}'
-    end
-  end
+  #     get "/home"
+  #     last_response.body.should == "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
+  #   end
+  # end
+
+
 end
 
