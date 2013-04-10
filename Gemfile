@@ -9,7 +9,10 @@ group :test do
   gem "activerecord-nulldb-adapter"
 end
 
-group :development do
+group :development, :test do
   gem "pry"
-  gem "debugger"
+  gem "pry-debugger"
+  gem "pry-rescue"
+  gem "pry-stack_explorer"
+  gem 'plymouth'
 end
