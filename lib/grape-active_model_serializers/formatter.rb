@@ -48,7 +48,7 @@ module Grape
 
             if options[:root] != false && serializer.root != false
               # the serializer for an Array is ActiveModel::ArraySerializer
-              options[:root] ||= serializer.root || resource.first.class.name.downcase.pluralize
+              options[:root] ||= serializer.root || resource.first.class.name.underscore.pluralize
             end
           end
 

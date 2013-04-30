@@ -53,6 +53,27 @@ describe Grape::ActiveModelSerializers do
     last_response.body.should == "{\"users\":[{\"first_name\":\"JR\",\"last_name\":\"HE\"},{\"first_name\":\"JR\",\"last_name\":\"HE\"}]}"
   end
 
+  context "for models with compound names" do
+    it "should generate the proper 'root' node for individual objects" do
+      subject.get("/home") do
+        BlogPost.new({title: 'Grape AM::S Rocks!', body: 'Really, it does.'})
+      end
+
+      get "/home"
+      last_response.body.should == "{\"blog_post\":{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}}"
+    end
+
+    it "should generate the proper 'root' node for serialized arrays of objects" do
+      subject.get("/home") do
+        blog_post = BlogPost.new({title: 'Grape AM::S Rocks!', body: 'Really, it does.'})
+        [blog_post, blog_post]
+      end
+
+      get "/home"
+      last_response.body.should == "{\"blog_posts\":[{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"},{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}]}"
+    end
+  end
+
   # [User2Serializer, 'user2', :user2].each do |serializer|
   #   it "should render using serializer (#{serializer})" do
   #     subject.get("/home", serializer: serializer) do
