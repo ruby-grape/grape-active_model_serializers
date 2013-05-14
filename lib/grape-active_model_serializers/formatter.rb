@@ -30,10 +30,8 @@ module Grape
 
         private
 
-        def serializer(endpoint, resource, options)
-          # default_options = controller.send(:default_serializer_options) || {}
-          options = {} #default_options.merge(options || {})
-
+        def serializer(endpoint, resource, options={})
+          
           serializer = options.delete(:serializer) ||
             (resource.respond_to?(:active_model_serializer) &&
              resource.active_model_serializer)
