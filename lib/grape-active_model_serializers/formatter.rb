@@ -1,15 +1,5 @@
 require 'active_record'
 
-# Make the Grape::Endpoint quiack like a controller
-module Grape
-  class Endpoint
-    def default_serializer_options; end
-    def serialization_scope; end
-    def _serialization_scope; end
-    def url_options; end
-  end
-end
-
 module Grape
   module Formatter
     module ActiveModelSerializers
@@ -21,11 +11,7 @@ module Grape
 
         def call(resource, env)
           @endpoint = env["api.endpoint"]
-
-          namespace         = endpoint.settings[:namespace]
-          namespace_options = namespace ? namespace.options : {}
-          route_options     = endpoint.options[:route_options]
-          options           = namespace_options.merge(route_options)
+          options   = endpoint.namespace_options.merge(endpoint.route_options)
 
           serializer = ::ActiveModel::Serializer.build_json(endpoint, resource, options)
 
