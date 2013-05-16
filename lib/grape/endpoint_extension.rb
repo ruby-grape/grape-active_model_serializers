@@ -6,6 +6,8 @@
 #
 module Grape
   module EndpointExtension
+    attr_accessor :controller_name
+
     def namespace_options
       settings[:namespace] ? settings[:namespace].options : {}
     end
@@ -18,7 +20,6 @@ module Grape
     def serialization_scope; end
     def _serialization_scope; end
     def url_options; end
-    def controller_name; end
   end
 
   Endpoint.send(:include, EndpointExtension)
