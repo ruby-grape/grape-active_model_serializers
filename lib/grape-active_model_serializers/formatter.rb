@@ -6,14 +6,17 @@ module Grape
     module ActiveModelSerializers
       class << self
         attr_accessor :infer_serializers
-        attr_reader :env
         attr_reader :endpoint
 
         ActiveModelSerializers.infer_serializers = true
 
         def call(resource, env)
-          # @object = object
-          options = env['api.endpoint'].options[:route_options]
+          @endpoint = env["api.endpoint"]
+
+          namespace         = endpoint.settings[:namespace]
+          namespace_options = namespace ? namespace.options : {}
+          route_options     = endpoint.options[:route_options]
+          options           = namespace_options.merge(route_options)
 
           serializer = serializer(endpoint, resource, options)
 
@@ -24,14 +27,9 @@ module Grape
           end
         end
 
-        #   options = endpoint.options[:route_options][:serializer_options] || {}
-        #   serializer.new(object, options).to_json
-        # end
-
         private
 
         def serializer(endpoint, resource, options={})
-          
           serializer = options.delete(:serializer) ||
             (resource.respond_to?(:active_model_serializer) &&
              resource.active_model_serializer)

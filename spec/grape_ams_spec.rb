@@ -74,6 +74,17 @@ describe Grape::ActiveModelSerializers do
     end
   end
 
+  it "uses namespace options when provided" do
+    subject.namespace :admin, :serializer => UserSerializer do
+      get('/jeff') do
+        User.new(first_name: 'Jeff')
+      end
+    end
+
+    get "/admin/jeff"
+    last_response.body.should == "{\"user\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
+  end
+
   # [User2Serializer, 'user2', :user2].each do |serializer|
   #   it "should render using serializer (#{serializer})" do
   #     subject.get("/home", serializer: serializer) do

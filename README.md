@@ -64,7 +64,7 @@ Grape::Formatter::ActiveModelSerializers.infer_serializers = false
 ```
 
 
-### Manually specifying a serializer
+### Manually specifying serializer options
 
 Serializers can be specified at a route level by with the serializer option. A serializer can be specified by passing the the serializer class or the serializer name. The following are equivalent:
 
@@ -78,6 +78,27 @@ get "/home", :serializer => "home"
 ```
 ```ruby
 get "/home", :serializer => :home
+...
+```
+
+You can also set a serializer at the namespace level. This serializer can/will be overriden if a serilizer is also specified on the route.
+
+```ruby
+namespace 'foo', :serializer => :bar do
+  get "/" do
+    # will use "bar" serializer
+  end
+
+  get "/home", :serializer => :home do
+    # will use "home" serializer
+  end
+end
+```
+
+Other standard options for `ActiveModel::Serializers` can be provided at either the namespace or route level with the same overriding behavior.
+
+```ruby
+get "/home", :root => 'world', :each_serializer => :fancy_home
 ...
 ```
 
