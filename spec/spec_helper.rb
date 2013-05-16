@@ -5,11 +5,14 @@ require 'bundler'
 Bundler.setup :default, :test
 
 require 'active_support/core_ext/hash/conversions'
+require 'active_record'
 require 'active_model'
 require "active_model_serializers"
 require "active_support/json"
 require 'rspec'
 require 'rack/test'
+
+ActiveRecord::Base.establish_connection :adapter => :nulldb, :schema  => 'db/schema.rb'
 require 'nulldb_rspec'
 
 include NullDB::RSpec::NullifiedDatabase

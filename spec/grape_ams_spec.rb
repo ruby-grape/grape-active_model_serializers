@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'spec_fakes'
+require "grape-active_model_serializers"
 # require 'active_model'
 
 describe Grape::ActiveModelSerializers do
