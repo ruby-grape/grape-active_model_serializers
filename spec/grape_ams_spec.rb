@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'spec_fakes'
+require "grape-active_model_serializers"
 # require 'active_model'
 
 describe Grape::ActiveModelSerializers do
@@ -72,6 +73,17 @@ describe Grape::ActiveModelSerializers do
       get "/home"
       last_response.body.should == "{\"blog_posts\":[{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"},{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}]}"
     end
+  end
+
+  it "uses namespace options when provided" do
+    subject.namespace :admin, :serializer => UserSerializer do
+      get('/jeff') do
+        User.new(first_name: 'Jeff')
+      end
+    end
+
+    get "/admin/jeff"
+    last_response.body.should == "{\"user\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
   end
 
   # [User2Serializer, 'user2', :user2].each do |serializer|
