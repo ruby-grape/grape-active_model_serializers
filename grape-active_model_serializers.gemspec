@@ -16,9 +16,9 @@ Gem::Specification.new do |gem|
   gem.version       = Grape::ActiveModelSerializers::VERSION
 
   gem.add_dependency "grape", "~> 0.3"
+  gem.add_dependency "active_model_serializers", "~> 0.8.0"
 
   gem.add_development_dependency "activerecord"
-  gem.add_development_dependency "active_model_serializers"
   gem.add_development_dependency "rspec", "~> 2.12.0"
   gem.add_development_dependency "rack-test"
   gem.add_development_dependency "rake"

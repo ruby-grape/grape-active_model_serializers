@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     grape-active_model_serializers (0.1.0)
+      active_model_serializers (~> 0.8.0)
       grape (~> 0.3)
 
 GEM
@@ -66,7 +67,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers
   activerecord
   activerecord-nulldb-adapter
   grape-active_model_serializers!
