@@ -28,8 +28,8 @@ describe Grape::ActiveModelSerializers do
   end
 
   it "should respond with proper content-type" do
-    subject.get("/home/users", :serializer => "user") do
-      {user: {first_name: "JR", last_name: "HE"}}
+    subject.get("/home/users", :serializer => UserSerializer) do
+      User.new
     end
     get("/home/users")
     last_response.headers["Content-Type"].should == "application/json"
