@@ -11,8 +11,6 @@ describe Grape::ActiveModelSerializers do
   before do
     subject.format :json
     subject.formatter :json, Grape::Formatter::ActiveModelSerializers
-
-    ActiveRecord::Base.configurations.merge!('test' => {'adapter' => 'nulldb'})
   end
 
   def app
