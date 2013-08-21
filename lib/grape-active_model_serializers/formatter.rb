@@ -1,5 +1,3 @@
-require 'active_record'
-
 module Grape
   module Formatter
     module ActiveModelSerializers
