@@ -10,6 +10,8 @@ require "active_support/json"
 require 'rspec'
 require 'rack/test'
 
+require 'jazz_hands'
+
 RSpec.configure do |config|
   config.include Rack::Test::Methods
 end
