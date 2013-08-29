@@ -55,13 +55,6 @@ end
 ```
 In this case, as User objects are being returned, grape-active_model_serializers will look for a serializer named UserSerializer.
 
-### Disabling serializer inferrence
-
-You can turn off serializer inferrence.
-```ruby
-Grape::Formatter::ActiveModelSerializers.infer_serializers = false
-```
-
 
 ### Manually specifying serializer options
 

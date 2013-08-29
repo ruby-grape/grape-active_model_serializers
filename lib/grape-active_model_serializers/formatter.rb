@@ -2,13 +2,10 @@ module Grape
   module Formatter
     module ActiveModelSerializers
       class << self
-        attr_accessor :infer_serializers
         attr_reader :endpoint
 
-        ActiveModelSerializers.infer_serializers = true
-
         def call(resource, env)
-          @endpoint = env["api.endpoint"]
+          @endpoint = env['api.endpoint']
           options   = endpoint.namespace_options.merge(endpoint.route_options)
 
           if resource.respond_to?(:to_ary) && !resource.empty?
