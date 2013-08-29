@@ -44,7 +44,7 @@ See [active_model_serializers](https://github.com/rails-api/active_model_seriali
 
 ### Serializers are inferred by active_record model names
 
-grape-active_model_serializers will search for serializers for the objects returned by your grape API.
+`grape-active_model_serializers` will search for serializers for the objects returned by your grape API.
 
 ```ruby
 namespace :users do
@@ -58,44 +58,27 @@ In this case, as User objects are being returned, grape-active_model_serializers
 
 ### Manually specifying serializer options
 
-Serializers can be specified at a route level by with the serializer option. A serializer can be specified by passing the the serializer class or the serializer name. The following are equivalent:
-
 ```ruby
-get "/home", :serializer => HomeSerializer
-...
-```
-```ruby
-get "/home", :serializer => "home"
-...
-```
-```ruby
-get "/home", :serializer => :home
-...
-```
-
-You can also set a serializer at the namespace level. This serializer can/will be overriden if a serilizer is also specified on the route.
-
-```ruby
+# Serializer options can be specified on routes or namespaces.
 namespace 'foo', :serializer => :bar do
   get "/" do
     # will use "bar" serializer
   end
 
+  # Options specified on a route or namespace override those of the containing namespace.
   get "/home", :serializer => :home do
     # will use "home" serializer
+  end
+
+  # All standard options for `ActiveModel::Serializers` are supported.
+  get "/fancy_homes", :root => 'world', :each_serializer => :fancy_homes
+  ...
   end
 end
 ```
 
-Other standard options for `ActiveModel::Serializers` can be provided at either the namespace or route level with the same overriding behavior.
 
-```ruby
-get "/home", :root => 'world', :each_serializer => :fancy_home
-...
-```
-
-
-### Example
+### Full Example
 
 ```ruby
 class User < ActiveRecord::Base
@@ -116,7 +99,7 @@ API.new.get "/home" # => '{:user=>{:first_name=>"JR", :last_name=>"HE"}}'
 ```
 
 
-## Rspec
+## RSpec
 
 See "Writing Tests" in https://github.com/intridea/grape.
 
@@ -132,9 +115,8 @@ Enjoy :)
 
 
 ## Thanks to
-
 The developers and maintainers of:
 [active_model_serializers](https://github.com/rails-api/active_model_serializers)
 [Grape](https://github.com/intridea/grape)!
 
-Structured and based upon [Grape](https://github.com/LTe/grape-rabl).
+Structured and based upon [grape-rabl](https://github.com/LTe/grape-rabl).
