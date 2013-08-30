@@ -85,5 +85,16 @@ describe Grape::ActiveModelSerializers do
     get "/admin/jeff"
     last_response.body.should == "{\"user\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
   end
+
+  it 'uses the name of the closest scope (namespace/route) for the root' do
+    app.namespace :admin, :serializer => UserSerializer do
+      get('/jeff') do
+        User.new(first_name: 'Jeff')
+      end
+    end
+
+    get "/admin/jeff"
+    last_response.body.should == "{\"admin\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
+  end
 end
 
