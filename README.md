@@ -4,6 +4,10 @@ Use [active_model_serializers](https://github.com/rails-api/active_model_seriali
 
 [![Build Status](https://api.travis-ci.org/jrhe/grape-active_model_serializers.png)](http://travis-ci.org/jrhe/grape-active_model_serializers) [![Dependency Status](https://gemnasium.com/jrhe/grape-active_model_serializers.png)](https://gemnasium.com/jrhe/grape-active_model_serializers) [![Code Climate](https://codeclimate.com/github/jrhe/grape-active_model_serializers.png)](https://codeclimate.com/github/jrhe/grape-active_model_serializers)
 
+## Breaking Changes
+#### v1.0.0
+* *BREAKING* Changes behaviour of root keys when serialising arrays. See [Array roots](https://github.com/jrhe/grape-active_model_serializers#array-roots)
+
 ## Installation
 
 Add the `grape` and `grape-active_model_serializers` gems to Gemfile.
@@ -56,7 +60,7 @@ end
 In this case, as User objects are being returned, grape-active_model_serializers will look for a serializer named UserSerializer.
 
 ### Array roots
-When serializing an array, the array root is set to the innermost namespace name if there is one, otherwise it is set to the route name (e.g. get 'name')
+When serializing an array, the array root is set to the innermost namespace name if there is one, otherwise it is set to the route name (e.g. get 'name').
 
 ```ruby
 namespace :users do
@@ -122,6 +126,12 @@ API.new.get "/home" # => '{:user=>{:first_name=>"JR", :last_name=>"HE"}}'
 See "Writing Tests" in https://github.com/intridea/grape.
 
 Enjoy :)
+
+## Changelog
+
+#### v1.0.0
+* Released on rubygems.org
+* *BREAKING* Changes behaviour of root keys when serialising arrays. See [Array roots](https://github.com/jrhe/grape-active_model_serializers#array-roots)
 
 
 ## Contributing
