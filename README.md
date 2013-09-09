@@ -55,6 +55,24 @@ end
 ```
 In this case, as User objects are being returned, grape-active_model_serializers will look for a serializer named UserSerializer.
 
+### Array roots
+When serializing an array, the array root is set to the innermost namespace name if there is one, otherwise it is set to the route name (e.g. get 'name')
+
+```ruby
+namespace :users do
+  get ":id" do
+    @user = User.find(params[:id])
+  end
+end
+# root = users
+```
+
+```ruby
+get "people" do
+  @user = User.all
+end
+# root = people
+```
 
 ### Manually specifying serializer options
 
