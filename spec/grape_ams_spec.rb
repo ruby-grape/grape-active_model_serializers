@@ -45,12 +45,12 @@ describe Grape::ActiveModelSerializers do
   end
 
   it "serializes arrays of objects" do
-    app.get("/home") do
+    app.get("/users") do
       user = User.new({first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk'})
       [user, user]
     end
 
-    get "/home"
+    get "/users"
     last_response.body.should == "{\"users\":[{\"first_name\":\"JR\",\"last_name\":\"HE\"},{\"first_name\":\"JR\",\"last_name\":\"HE\"}]}"
   end
 
@@ -65,12 +65,12 @@ describe Grape::ActiveModelSerializers do
     end
 
     it "generates the proper 'root' node for serialized arrays" do
-      app.get("/home") do
+      app.get("/blog_posts") do
         blog_post = BlogPost.new({title: 'Grape AM::S Rocks!', body: 'Really, it does.'})
         [blog_post, blog_post]
       end
 
-      get "/home"
+      get "/blog_posts"
       last_response.body.should == "{\"blog_posts\":[{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"},{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}]}"
     end
   end
@@ -86,15 +86,30 @@ describe Grape::ActiveModelSerializers do
     last_response.body.should == "{\"user\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
   end
 
-  it 'uses the name of the closest scope (namespace/route) for the root' do
-    app.namespace :admin, :serializer => UserSerializer do
-      get('/jeff') do
-        User.new(first_name: 'Jeff')
+  context 'route is in a namespace' do
+    it 'uses the name of the closest namespace for the root' do
+      app.namespace :admin do
+        get('/jeff') do
+          user = User.new(first_name: 'Jeff')
+          [user, user]
+        end
       end
-    end
 
-    get "/admin/jeff"
-    last_response.body.should == "{\"admin\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
+      get "/admin/jeff"
+      last_response.body.should == "{\"admin\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
+    end
+  end
+
+  context 'route is not in a namespace' do
+    it 'uses the of the route for the root' do
+      app.get('/people') do
+        user = User.new(first_name: 'Jeff')
+        [user, user]
+      end
+
+      get "/people"
+      last_response.body.should == "{\"people\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
+    end
   end
 end
 

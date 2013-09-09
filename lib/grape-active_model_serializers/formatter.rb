@@ -18,13 +18,25 @@ module Grape
 
           if resource.respond_to?(:to_ary) && !resource.empty?
             # ensure we have an root to fallback on
-            endpoint.controller_name = resource.first.class.name.underscore.pluralize
+            endpoint.controller_name = default_root(endpoint)
           end
           ::ActiveModel::Serializer.build_json(endpoint, resource, options)
         end
 
         def build_options_from_endpoint(endpoint)
           endpoint.namespace_options.merge(endpoint.route_options)
+        end
+
+        # array root is the innermost namespace name ('space') if there is one,
+        # otherwise the route name (e.g. get 'name')
+        def default_root(endpoint)
+          innermost_scope = endpoint.settings.peek
+
+          if innermost_scope[:namespace]
+            innermost_scope[:namespace].space
+          else
+            endpoint.options[:path][0].split('/')[-1]
+          end
         end
       end
     end
