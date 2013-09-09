@@ -1,5 +1,8 @@
 require 'spec_helper'
-require 'spec_fakes'
+require 'support/models/user'
+require 'support/models/blog_post'
+require 'support/serializers/user_serializer'
+require 'support/serializers/blog_post_serializer'
 require "grape-active_model_serializers"
 
 describe Grape::ActiveModelSerializers do
