@@ -5,7 +5,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Jonathan Richard Henry Evans"]
   gem.email         = ["contact@jrhe.co.uk"]
   gem.summary       = %q{Use active_model_serializer in grape}
-  gem.description   = %q{Provides a Formatter for the Grape API DSL for emitting objects serialized with active_model_serializer serializers.}
+  gem.description   = %q{Provides a Formatter for the Grape API DSL to emit objects serialized with active_model_serializers.}
   gem.homepage      = "https://github.com/jrhe/grape-active_model_serializers"
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
