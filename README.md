@@ -27,7 +27,7 @@ And then execute:
 
 ```ruby
 # config.ru
-require 'grape/active_model_serializers'
+require 'grape-active_model_serializers'
 ```
 
 
