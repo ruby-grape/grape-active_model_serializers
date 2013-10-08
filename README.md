@@ -99,6 +99,37 @@ namespace 'foo', :serializer => :bar do
 end
 ```
 
+### current_user
+
+One of the nice features of ActiveModel::Serializers is that it
+provides access to the authorization context via the `current_user`.
+
+In Grape, you can get the same behavior by defining a `current_user`
+helper method:
+
+```ruby
+  helpers do
+    def current_user
+      @current_user ||= User.where( :access_token => params[:token]).first
+    end
+
+    def authenticate!
+      error!('401 Unauthenticated', 401) unless current_user
+    end
+  end
+```
+
+Then, in your serializer, you could show or hide some elements
+based on the current user's permissions:
+
+```ruby
+class PostSerializer < ActiveModel::Serializer
+...
+  def include_admin_comments?
+    current_user.roles.member? :admin
+  end
+end
+```
 
 ### Full Example
 
