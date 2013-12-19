@@ -35,7 +35,7 @@ module Grape
           if innermost_scope[:namespace]
             innermost_scope[:namespace].space
           else
-            endpoint.options[:path][0].split('/')[-1]
+            endpoint.options[:path][0].to_s.split('/')[-1]
           end
         end
       end
