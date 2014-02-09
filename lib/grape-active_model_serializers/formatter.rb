@@ -20,7 +20,42 @@ module Grape
             # ensure we have an root to fallback on
             endpoint.controller_name = default_root(endpoint)
           end
-          ::ActiveModel::Serializer.build_json(endpoint, resource, options)
+
+          ::ActiveModel::Serializer.build_json(endpoint,
+                                               resource,
+                                               options.merge(other_options)
+                                              )
+        end
+
+        def other_options
+          options = {}
+          if @meta_content_items
+            meta_option = @meta_content_items[:meta]
+            @meta_content_items.delete(:meta)
+            options[:meta] = meta_option if meta_option
+            if @meta_key
+             key_option = @meta_key[:meta_key]
+              @meta_key.delete(:meta_key)
+              options[:meta_key] = key_option if key_option
+            end
+          end
+          options
+        end
+
+        def meta
+          @meta_content_items || {}
+        end
+
+        def meta=(meta_content)
+          @meta_content_items = { meta: meta_content } if meta_content
+        end
+
+        def meta_key
+          @meta_key || {}
+        end
+
+        def meta_key=(key)
+          @meta_key = { meta_key: key } if key
         end
 
         def build_options_from_endpoint(endpoint)
