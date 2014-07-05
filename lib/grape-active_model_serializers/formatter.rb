@@ -16,28 +16,25 @@ module Grape
           endpoint = env['api.endpoint']
           options = build_options_from_endpoint(endpoint)
 
-          if resource.respond_to?(:to_ary) && !resource.empty?
+          if serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource))
+            options[:scope] = serialization_scope unless options.has_key?(:scope)
             # ensure we have an root to fallback on
-            endpoint.controller_name = default_root(endpoint)
+            options[:resource_name] = default_root(endpoint) if resource.respond_to?(:to_ary)
+            serializer.new(resource, options.merge(other_options))
           end
-
-          ::ActiveModel::Serializer.build_json(endpoint,
-                                               resource,
-                                               options.merge(other_options)
-                                              )
         end
 
         def other_options
           options = {}
           if @meta_content_items
-            meta_option = @meta_content_items[:meta]
-            @meta_content_items.delete(:meta)
-            options[:meta] = meta_option if meta_option
             if @meta_key
              key_option = @meta_key[:meta_key]
               @meta_key.delete(:meta_key)
               options[:meta_key] = key_option if key_option
             end
+            meta_option = @meta_content_items[:meta]
+            @meta_content_items.delete(:meta)
+            options[key_option || :meta] = meta_option if meta_option
           end
           options
         end
@@ -72,6 +69,10 @@ module Grape
           else
             endpoint.options[:path][0].to_s.split('/')[-1]
           end
+        end
+
+        def serialization_scope
+          :current_user
         end
       end
     end
