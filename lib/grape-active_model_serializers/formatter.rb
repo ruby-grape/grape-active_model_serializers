@@ -18,10 +18,8 @@ module Grape
 
           if serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource))
             options[:scope] = serialization_scope unless options.has_key?(:scope)
-            if resource.respond_to?(:to_ary) && !resource.empty?
-              # ensure we have an root to fallback on
-              options[:resource_name] = default_root(endpoint)
-            end
+            # ensure we have an root to fallback on
+            options[:resource_name] = default_root(endpoint) if resource.respond_to?(:to_ary)
             serializer.new(resource, options.merge(other_options))
           end
         end
