@@ -31,4 +31,24 @@ describe Grape::Formatter::ActiveModelSerializers do
       expect(subject.meta_key).to eq({ meta_key: :custom_key_name })
     end
   end
+
+  describe '.fetch_serializer' do
+    let(:user) { User.new(first_name: 'John') }
+    let(:endpoint) { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
+    let(:env) { { 'api.endpoint' => endpoint } }
+
+    before do
+      def endpoint.current_user
+        @current_user ||= User.new(first_name: 'Current user')
+      end
+    end
+
+    subject { described_class.fetch_serializer(user, env) }
+
+    it { should be_a UserSerializer }
+
+    it 'should have correct scope set' do
+      expect(subject.scope).to eq(endpoint.current_user)
+    end
+  end
 end

@@ -1,7 +1,4 @@
 require 'spec_helper'
-require 'support/models/user'
-require 'support/serializers/user_serializer'
-require 'grape-active_model_serializers'
 require 'securerandom'
 
 describe '#render' do

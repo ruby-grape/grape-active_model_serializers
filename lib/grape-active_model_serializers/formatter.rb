@@ -17,7 +17,7 @@ module Grape
           options = build_options_from_endpoint(endpoint)
 
           if serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource))
-            options[:scope] = serialization_scope unless options.has_key?(:scope)
+            options[:scope] = endpoint.serialization_scope unless options.has_key?(:scope)
             # ensure we have an root to fallback on
             options[:resource_name] = default_root(endpoint) if resource.respond_to?(:to_ary)
             serializer.new(resource, options.merge(other_options))
@@ -69,10 +69,6 @@ module Grape
           else
             endpoint.options[:path][0].to_s.split('/')[-1]
           end
-        end
-
-        def serialization_scope
-          :current_user
         end
       end
     end
