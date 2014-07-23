@@ -5,9 +5,6 @@ Use [active_model_serializers](https://github.com/rails-api/active_model_seriali
 [![Build Status](https://api.travis-ci.org/jrhe/grape-active_model_serializers.png)](http://travis-ci.org/jrhe/grape-active_model_serializers) [![Dependency Status](https://gemnasium.com/jrhe/grape-active_model_serializers.png)](https://gemnasium.com/jrhe/grape-active_model_serializers) [![Code Climate](https://codeclimate.com/github/jrhe/grape-active_model_serializers.png)](https://codeclimate.com/github/jrhe/grape-active_model_serializers)
 
 ## Breaking Changes
-#### v1.2.1
-* Adds support for active model serializer 0.9.x
-
 #### v1.0.0
 * *BREAKING* Changes behaviour of root keys when serialising arrays. See [Array roots](https://github.com/jrhe/grape-active_model_serializers#array-roots)
 
@@ -172,6 +169,10 @@ See "Writing Tests" in https://github.com/intridea/grape.
 Enjoy :)
 
 ## Changelog
+
+#### v1.2.1
+* Adds support for active model serializer 0.9.x
+
 
 #### v1.0.0
 * Released on rubygems.org
