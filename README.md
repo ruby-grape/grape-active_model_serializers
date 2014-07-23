@@ -99,6 +99,16 @@ namespace 'foo', :serializer => :bar do
 end
 ```
 
+### Custom metadata along with the resources
+
+```ruby
+# Control any additional metadata using meta and meta_key
+get "/homes"
+  collection = Home.all
+  render collection, { meta: { page: 5, current_page: 3 }, meta_key: :pagination_info }
+end
+```
+
 ### current_user
 
 One of the nice features of ActiveModel::Serializers is that it
