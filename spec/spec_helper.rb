@@ -9,6 +9,7 @@ require 'active_support/core_ext/hash/conversions'
 require "active_support/json"
 require 'rspec'
 require 'rack/test'
+require 'grape-active_model_serializers'
 
 require 'jazz_hands'
 
