@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Grape::EndpointExtension' do
 
-  subject { Grape::Endpoint.new(nil, {path: '/', method: 'foo'}) }
+  subject { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
 
   let(:serializer) { Grape::Formatter::ActiveModelSerializers }
 
