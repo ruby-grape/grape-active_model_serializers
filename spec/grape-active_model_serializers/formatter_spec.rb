@@ -48,7 +48,7 @@ describe Grape::Formatter::ActiveModelSerializers do
     it { should be_a UserSerializer }
 
     it 'should have correct scope set' do
-      expect(subject.scope).to eq(endpoint.current_user)
+      expect(subject.scope.current_user).to eq(endpoint.current_user)
     end
   end
 end

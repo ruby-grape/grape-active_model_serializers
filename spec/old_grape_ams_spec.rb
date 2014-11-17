@@ -7,6 +7,7 @@ require "grape-active_model_serializers"
 
 describe Grape::ActiveModelSerializers do
   let(:app) { Class.new(Grape::API) }
+  subject { last_response.body }
 
   before do
     app.format :json
@@ -19,7 +20,7 @@ describe Grape::ActiveModelSerializers do
       User.new
     end
     get("/home/users")
-    last_response.headers["Content-Type"].should == "application/json"
+    expect(last_response.headers["Content-Type"]).to eql "application/json"
   end
 
   context 'serializer is set to nil' do
@@ -28,9 +29,9 @@ describe Grape::ActiveModelSerializers do
         {user: {first_name: "JR", last_name: "HE"}}
       end
     end
-    it 'uses the built in grape serializer' do 
+    it 'uses the built in grape serializer' do
       get("/home")
-      last_response.body.should == "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
+      expect(subject).to eql "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
     end
   end
 
@@ -43,7 +44,7 @@ describe Grape::ActiveModelSerializers do
 
     it 'infers the serializer' do
       get "/home"
-      last_response.body.should == "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
+      expect(subject).to eql "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
     end
   end
 
@@ -54,7 +55,7 @@ describe Grape::ActiveModelSerializers do
     end
 
     get "/users"
-    last_response.body.should == "{\"users\":[{\"first_name\":\"JR\",\"last_name\":\"HE\"},{\"first_name\":\"JR\",\"last_name\":\"HE\"}]}"
+    expect(subject).to eql "{\"users\":[{\"first_name\":\"JR\",\"last_name\":\"HE\"},{\"first_name\":\"JR\",\"last_name\":\"HE\"}]}"
   end
 
   context "models with compound names" do
@@ -64,7 +65,7 @@ describe Grape::ActiveModelSerializers do
       end
 
       get "/home"
-      last_response.body.should == "{\"blog_post\":{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}}"
+      expect(subject).to eql "{\"blog_post\":{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}}"
     end
 
     it "generates the proper 'root' node for serialized arrays" do
@@ -74,7 +75,7 @@ describe Grape::ActiveModelSerializers do
       end
 
       get "/blog_posts"
-      last_response.body.should == "{\"blog_posts\":[{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"},{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}]}"
+      expect(subject).to eql "{\"blog_posts\":[{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"},{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}]}"
     end
   end
 
@@ -86,7 +87,7 @@ describe Grape::ActiveModelSerializers do
     end
 
     get "/admin/jeff"
-    last_response.body.should == "{\"user\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
+    expect(subject).to eql "{\"user\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
   end
 
   context 'route is in a namespace' do
@@ -99,7 +100,7 @@ describe Grape::ActiveModelSerializers do
       end
 
       get "/admin/jeff"
-      last_response.body.should == "{\"admin\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
+      expect(subject).to eql "{\"admin\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
     end
   end
 
@@ -111,7 +112,7 @@ describe Grape::ActiveModelSerializers do
       end
 
       get "/people"
-      last_response.body.should == "{\"people\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
+      expect(subject).to eql "{\"people\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
     end
   end
 end
