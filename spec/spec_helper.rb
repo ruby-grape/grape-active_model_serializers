@@ -11,8 +11,6 @@ require 'rspec'
 require 'rack/test'
 require 'grape-active_model_serializers'
 
-require 'jazz_hands'
-
 RSpec.configure do |config|
   config.include Rack::Test::Methods
 end
