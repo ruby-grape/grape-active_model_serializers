@@ -7,12 +7,12 @@ describe 'Grape::EndpointExtension' do
   let(:serializer) { Grape::Formatter::ActiveModelSerializers }
 
   let(:user) do
-               Object.new do
-                 def name
-                   'sven'
-                 end
-               end
-             end
+    Object.new do
+      def name
+        'sven'
+      end
+    end
+  end
 
   let(:users) { [user, user] }
 
