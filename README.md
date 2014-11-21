@@ -1,7 +1,3 @@
-## Looking for new maintainer(s)
-
-As much as I love ruby, grape and AMS, I am no longer using them. I think that it makes sense for someone else to pick this project up as a maintainer so that it can be kept more current as I feel I have been neglecting it. If you want to maintain this project, please email me at contact@jrhe.co.uk. I will continue to merge changes in when I have time. Cheers - JRHE
-
 # Grape::ActiveModelSerializers
 
 Use [active_model_serializers](https://github.com/rails-api/active_model_serializers) with [Grape](https://github.com/intridea/grape)!
