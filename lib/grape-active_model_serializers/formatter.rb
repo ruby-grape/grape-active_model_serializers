@@ -56,7 +56,7 @@ module Grape
         end
 
         def build_options_from_endpoint(endpoint)
-          endpoint.namespace_options.merge(endpoint.route_options)
+          [endpoint.default_serializer_options || {}, endpoint.namespace_options, endpoint.route_options].reduce(:merge)
         end
 
         # array root is the innermost namespace name ('space') if there is one,
