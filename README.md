@@ -128,15 +128,15 @@ In Grape, you can get the same behavior by defining a `current_user`
 helper method:
 
 ```ruby
-  helpers do
-    def current_user
-      @current_user ||= User.where( :access_token => params[:token]).first
-    end
-
-    def authenticate!
-      error!('401 Unauthenticated', 401) unless current_user
-    end
+helpers do
+  def current_user
+    @current_user ||= User.where( :access_token => params[:token]).first
   end
+
+  def authenticate!
+    error!('401 Unauthenticated', 401) unless current_user
+  end
+end
 ```
 
 Then, in your serializer, you could show or hide some elements
