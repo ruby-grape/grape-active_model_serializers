@@ -112,11 +112,11 @@ end
 ### Support for `default_serializer_options`
 
 ```ruby
-  helper do
-    def default_serializer_options
-      {only: params[:only], except: params[:except]}
-    end
+helpers do
+  def default_serializer_options
+    {only: params[:only], except: params[:except]}
   end
+end
 ```
 
 ### current_user
