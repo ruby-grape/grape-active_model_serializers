@@ -16,7 +16,7 @@ describe Grape::Formatter::ActiveModelSerializers do
 
     it 'will wrap valid input in the meta: {} wrapper' do
       subject.meta = { total: 2 }
-      expect(subject.meta).to eq({ meta: { total: 2 } })
+      expect(subject.meta).to eq(meta: { total: 2 })
     end
   end
 
@@ -28,7 +28,7 @@ describe Grape::Formatter::ActiveModelSerializers do
 
     it 'will wrap valid input in the meta_key: {} wrapper' do
       subject.meta_key = :custom_key_name
-      expect(subject.meta_key).to eq({ meta_key: :custom_key_name })
+      expect(subject.meta_key).to eq(meta_key: :custom_key_name)
     end
   end
 
@@ -36,9 +36,9 @@ describe Grape::Formatter::ActiveModelSerializers do
     let(:user) { User.new(first_name: 'John') }
 
     if Grape::Util.const_defined?('InheritableSetting')
-      let(:endpoint) { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, {path: '/', method: 'foo'}) }
+      let(:endpoint) { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, path: '/', method: 'foo') }
     else
-      let(:endpoint) { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
+      let(:endpoint) { Grape::Endpoint.new({}, path: '/', method: 'foo') }
     end
 
     let(:env) { { 'api.endpoint' => endpoint } }

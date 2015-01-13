@@ -16,12 +16,13 @@ module Grape
           endpoint = env['api.endpoint']
           options = build_options_from_endpoint(endpoint)
 
-          if serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource))
-            options[:scope] = endpoint unless options.has_key?(:scope)
-            # ensure we have an root to fallback on
-            options[:resource_name] = default_root(endpoint) if resource.respond_to?(:to_ary)
-            serializer.new(resource, options.merge(other_options))
-          end
+          serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource))
+          return nil unless serializer
+
+          options[:scope] = endpoint unless options.key?(:scope)
+          # ensure we have an root to fallback on
+          options[:resource_name] = default_root(endpoint) if resource.respond_to?(:to_ary)
+          serializer.new(resource, options.merge(other_options))
         end
 
         def other_options
@@ -57,10 +58,10 @@ module Grape
         # otherwise the route name (e.g. get 'name')
         def default_root(endpoint)
           innermost_scope = if endpoint.respond_to?(:namespace_stackable)
-            endpoint.namespace_stackable(:namespace).last
-          else
-            endpoint.settings.peek[:namespace]
-          end
+                              endpoint.namespace_stackable(:namespace).last
+                            else
+                              endpoint.settings.peek[:namespace]
+                            end
 
           if innermost_scope
             innermost_scope.space

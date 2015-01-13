@@ -82,18 +82,18 @@ end
 
 ```ruby
 # Serializer options can be specified on routes or namespaces.
-namespace 'foo', :serializer => BarSerializer do
+namespace 'foo', serializer: BarSerializer do
   get "/" do
     # will use "bar" serializer
   end
 
   # Options specified on a route or namespace override those of the containing namespace.
-  get "/home", :serializer => HomeSerializer do
+  get "/home", serializer: HomeSerializer do
     # will use "home" serializer
   end
 
   # All standard options for `ActiveModel::Serializers` are supported.
-  get "/fancy_homes", :root => 'world', :each_serializer => FancyHomesSerializer
+  get "/fancy_homes", root: 'world', each_serializer: FancyHomesSerializer
   ...
   end
 end
@@ -130,7 +130,7 @@ helper method:
 ```ruby
 helpers do
   def current_user
-    @current_user ||= User.where( :access_token => params[:token]).first
+    @current_user ||= User.where(access_token: params[:token]).first
   end
 
   def authenticate!
@@ -168,7 +168,7 @@ class API < Grape::API
   end
 end
 
-API.new.get "/home" # => '{:user=>{:first_name=>"JR", :last_name=>"HE"}}'
+API.new.get "/home" # => '{ user: { first_name: "JR", last_name: "HE" } }'
 ```
 
 
