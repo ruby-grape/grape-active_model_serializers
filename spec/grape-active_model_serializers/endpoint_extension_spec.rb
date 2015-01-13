@@ -25,15 +25,14 @@ describe 'Grape::EndpointExtension' do
     let(:meta_full) { { meta: meta_content } }
     context 'supplying meta' do
       it 'passes through the Resource and uses given meta settings' do
-        expect(serializer).to receive(:meta=).with(meta_content)
+        expect(serializer).to receive(:meta=).with(meta_full)
         expect(subject.render(users, meta_full)).to eq(users)
       end
     end
     context 'supplying meta and key' do
       let(:meta_key) { { meta_key: :custom_key_name } }
       it 'passes through the Resource and uses given meta settings' do
-        expect(serializer).to receive(:meta=).with(meta_content)
-        expect(serializer).to receive(:meta_key=).with(meta_key[:meta_key])
+        expect(serializer).to receive(:meta=).with(meta_full.merge(meta_key))
         expect(subject.render(users, meta_full.merge(meta_key))).to eq(users)
       end
     end

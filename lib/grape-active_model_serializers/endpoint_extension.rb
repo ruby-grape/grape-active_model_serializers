@@ -36,8 +36,7 @@ module Grape
     end
 
     def render(resources, meta = {})
-      Formatter::ActiveModelSerializers.meta = meta[:meta]
-      Formatter::ActiveModelSerializers.meta_key = meta[:meta_key]
+      Formatter::ActiveModelSerializers.meta = meta
       resources
     end
 

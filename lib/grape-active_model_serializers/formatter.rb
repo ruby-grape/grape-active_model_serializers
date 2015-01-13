@@ -28,7 +28,7 @@ module Grape
         def other_options
           options = {}
           meta =  Formatter::ActiveModelSerializers.meta.delete(:meta)
-          meta_key = Formatter::ActiveModelSerializers.meta_key.delete(:meta_key)
+          meta_key = Formatter::ActiveModelSerializers.meta.delete(:meta_key)
           options[:meta_key] = meta_key if meta && meta_key
           options[meta_key || :meta] = meta if meta
           options
@@ -39,15 +39,7 @@ module Grape
         end
 
         def meta=(value)
-          @meta = value ? { meta: value } : nil
-        end
-
-        def meta_key
-          @meta_key || {}
-        end
-
-        def meta_key=(key)
-          @meta_key = key ? { meta_key: key } : nil
+          @meta = value
         end
 
         def build_options_from_endpoint(endpoint)
