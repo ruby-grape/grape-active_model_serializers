@@ -20,33 +20,18 @@ module Grape
             options[:scope] = endpoint unless options.has_key?(:scope)
             # ensure we have an root to fallback on
             options[:resource_name] = default_root(endpoint) if resource.respond_to?(:to_ary)
-            serializer.new(resource, options.merge(other_options))
+            serializer.new(resource, options.merge(other_options(env)))
           end
         end
 
-        def other_options
+        def other_options(env)
           options = {}
-          meta =  Formatter::ActiveModelSerializers.meta.delete(:meta)
-          meta_key = Formatter::ActiveModelSerializers.meta_key.delete(:meta_key)
+          ams_meta = env['ams_meta'] || {}
+          meta =  ams_meta.delete(:meta)
+          meta_key = ams_meta.delete(:meta_key)
           options[:meta_key] = meta_key if meta && meta_key
           options[meta_key || :meta] = meta if meta
           options
-        end
-
-        def meta
-          @meta || {}
-        end
-
-        def meta=(value)
-          @meta = value ? { meta: value } : nil
-        end
-
-        def meta_key
-          @meta_key || {}
-        end
-
-        def meta_key=(key)
-          @meta_key = key ? { meta_key: key } : nil
         end
 
         def build_options_from_endpoint(endpoint)
