@@ -35,8 +35,8 @@ module Grape
       end
     end
 
-    def render(resources, meta={})
-      Formatter::ActiveModelSerializers.meta = meta
+    def render(resources, meta = {})
+      env['ams_meta'] = meta
       resources
     end
 
