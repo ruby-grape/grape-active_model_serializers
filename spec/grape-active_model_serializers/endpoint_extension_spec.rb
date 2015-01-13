@@ -1,11 +1,10 @@
 require 'spec_helper'
 
 describe 'Grape::EndpointExtension' do
-
   if Grape::Util.const_defined?('InheritableSetting')
-    subject { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, {path: '/', method: 'foo'}) }
+    subject { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, path: '/', method: 'foo') }
   else
-    subject { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
+    subject { Grape::Endpoint.new({}, path: '/', method: 'foo') }
   end
 
   let(:serializer) { Grape::Formatter::ActiveModelSerializers }
@@ -20,10 +19,10 @@ describe 'Grape::EndpointExtension' do
 
   let(:users) { [user, user] }
 
-  describe "#render" do
+  describe '#render' do
     it { should respond_to(:render) }
-    let (:meta_content) { { total: 2 } }
-    let (:meta_full) { { meta: meta_content } }
+    let(:meta_content) { { total: 2 } }
+    let(:meta_full) { { meta: meta_content } }
     context 'supplying meta' do
       it 'passes through the Resource and uses given meta settings' do
         expect(serializer).to receive(:meta=).with(meta_content)
@@ -31,7 +30,7 @@ describe 'Grape::EndpointExtension' do
       end
     end
     context 'supplying meta and key' do
-      let (:meta_key) { { meta_key: :custom_key_name } }
+      let(:meta_key) { { meta_key: :custom_key_name } }
       it 'passes through the Resource and uses given meta settings' do
         expect(serializer).to receive(:meta=).with(meta_content)
         expect(serializer).to receive(:meta_key=).with(meta_key[:meta_key])
@@ -39,5 +38,4 @@ describe 'Grape::EndpointExtension' do
       end
     end
   end
-
 end
