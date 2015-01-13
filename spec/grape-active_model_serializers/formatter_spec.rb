@@ -34,7 +34,13 @@ describe Grape::Formatter::ActiveModelSerializers do
 
   describe '.fetch_serializer' do
     let(:user) { User.new(first_name: 'John') }
-    let(:endpoint) { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
+
+    if Grape::Util.const_defined?('InheritableSetting')
+      let(:endpoint) { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, {path: '/', method: 'foo'}) }
+    else
+      let(:endpoint) { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
+    end
+
     let(:env) { { 'api.endpoint' => endpoint } }
 
     before do

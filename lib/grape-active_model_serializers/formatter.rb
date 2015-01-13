@@ -26,25 +26,19 @@ module Grape
 
         def other_options
           options = {}
-          if @meta_content_items
-            if @meta_key
-             key_option = @meta_key[:meta_key]
-              @meta_key.delete(:meta_key)
-              options[:meta_key] = key_option if key_option
-            end
-            meta_option = @meta_content_items[:meta]
-            @meta_content_items.delete(:meta)
-            options[key_option || :meta] = meta_option if meta_option
-          end
+          meta =  Formatter::ActiveModelSerializers.meta.delete(:meta)
+          meta_key = Formatter::ActiveModelSerializers.meta_key.delete(:meta_key)
+          options[:meta_key] = meta_key if meta && meta_key
+          options[meta_key || :meta] = meta if meta
           options
         end
 
         def meta
-          @meta_content_items || {}
+          @meta || {}
         end
 
-        def meta=(meta_content)
-          @meta_content_items = { meta: meta_content } if meta_content
+        def meta=(value)
+          @meta = value ? { meta: value } : nil
         end
 
         def meta_key
@@ -52,7 +46,7 @@ module Grape
         end
 
         def meta_key=(key)
-          @meta_key = { meta_key: key } if key
+          @meta_key = key ? { meta_key: key } : nil
         end
 
         def build_options_from_endpoint(endpoint)
@@ -62,10 +56,14 @@ module Grape
         # array root is the innermost namespace name ('space') if there is one,
         # otherwise the route name (e.g. get 'name')
         def default_root(endpoint)
-          innermost_scope = endpoint.settings.peek
+          innermost_scope = if endpoint.respond_to?(:namespace_stackable)
+            endpoint.namespace_stackable(:namespace).last
+          else
+            endpoint.settings.peek[:namespace]
+          end
 
-          if innermost_scope[:namespace]
-            innermost_scope[:namespace].space
+          if innermost_scope
+            innermost_scope.space
           else
             endpoint.options[:path][0].to_s.split('/')[-1]
           end
