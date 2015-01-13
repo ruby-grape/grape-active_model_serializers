@@ -1,0 +1,15 @@
+language: ruby
+
+sudo: false
+
+rvm:
+  - 2.1.1
+  - 1.9.3
+  - rbx-2.2.10
+  - jruby-19mode
+
+env:
+  - GRAPE_VERSION=0.8.0
+  - GRAPE_VERSION=0.9.0
+  - GRAPE_VERSION=0.10.1
+  - GRAPE_VERSION=HEAD
