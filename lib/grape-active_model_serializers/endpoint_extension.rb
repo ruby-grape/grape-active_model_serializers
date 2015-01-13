@@ -9,11 +9,19 @@ module Grape
     attr_accessor :controller_name
 
     def namespace_options
-      settings[:namespace] ? settings[:namespace].options : {}
+      if self.respond_to?(:inheritable_setting)
+        inheritable_setting.namespace
+      else
+        settings[:namespace] ? settings[:namespace].options : {}
+      end
     end
 
     def route_options
-      options[:route_options]
+      if self.respond_to?(:inheritable_setting)
+        inheritable_setting.route
+      else
+        options[:route_options]
+      end
     end
 
     def self.included(base)
@@ -39,12 +47,8 @@ module Grape
     private
 
     def set_meta_and_meta_key(meta)
-      if meta.has_key?(:meta)
-        Formatter::ActiveModelSerializers.meta = meta[:meta]
-        if meta.has_key?(:meta_key)
-          Formatter::ActiveModelSerializers.meta_key = meta[:meta_key]
-        end
-      end
+      Formatter::ActiveModelSerializers.meta = meta[:meta]
+      Formatter::ActiveModelSerializers.meta_key = meta[:meta_key]
     end
 
   end

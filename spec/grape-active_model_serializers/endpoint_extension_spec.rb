@@ -2,7 +2,11 @@ require 'spec_helper'
 
 describe 'Grape::EndpointExtension' do
 
-  subject { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
+  if Grape::Util.const_defined?('InheritableSetting')
+    subject { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, {path: '/', method: 'foo'}) }
+  else
+    subject { Grape::Endpoint.new({}, {path: '/', method: 'foo'}) }
+  end
 
   let(:serializer) { Grape::Formatter::ActiveModelSerializers }
 

@@ -180,6 +180,10 @@ Enjoy :)
 
 ## Changelog
 
+#### Next
+* Adds support for Grape 0.10.x
+
+
 #### v1.2.1
 * Adds support for active model serializer 0.9.x
 
