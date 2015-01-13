@@ -36,20 +36,13 @@ module Grape
     end
 
     def render(resources, meta={})
-      set_meta_and_meta_key(meta)
+      Formatter::ActiveModelSerializers.meta = meta
       resources
     end
 
     def default_serializer_options; end
 
     def url_options; end
-
-    private
-
-    def set_meta_and_meta_key(meta)
-      Formatter::ActiveModelSerializers.meta = meta[:meta]
-      Formatter::ActiveModelSerializers.meta_key = meta[:meta_key]
-    end
 
   end
   Endpoint.send(:include, EndpointExtension)
