@@ -33,7 +33,7 @@ describe Grape::Formatter::ActiveModelSerializers do
   end
 
   describe 'serializer options from namespace' do
-    let(:app){ Class.new(Grape::API) }
+    let(:app) { Class.new(Grape::API) }
 
     before do
       app.format :json
