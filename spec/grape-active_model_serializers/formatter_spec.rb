@@ -32,13 +32,32 @@ describe Grape::Formatter::ActiveModelSerializers do
     end
   end
 
+  describe 'serializer options from namespace' do
+    let(:app){ Class.new(Grape::API) }
+
+    before do
+      app.format :json
+      app.formatter :json, Grape::Formatter::ActiveModelSerializers
+
+      app.namespace('space') do |ns|
+        ns.get('/', root: false) do
+          { user: { first_name: 'JR', last_name: 'HE' } }
+        end
+      end
+    end
+
+    it 'should read serializer options like "root"' do
+      expect(described_class.build_options_from_endpoint(app.endpoints.first)).to include :root
+    end
+  end
+
   describe '.fetch_serializer' do
     let(:user) { User.new(first_name: 'John') }
 
     if Grape::Util.const_defined?('InheritableSetting')
-      let(:endpoint) { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, path: '/', method: 'foo') }
+      let(:endpoint) { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, path: '/', method: 'foo', root: false) }
     else
-      let(:endpoint) { Grape::Endpoint.new({}, path: '/', method: 'foo') }
+      let(:endpoint) { Grape::Endpoint.new({}, path: '/', method: 'foo', root: false) }
     end
 
     let(:env) { { 'api.endpoint' => endpoint } }
@@ -64,6 +83,10 @@ describe Grape::Formatter::ActiveModelSerializers do
     it 'should read default serializer options' do
       expect(subject.instance_variable_get('@only')).to eq([:only])
       expect(subject.instance_variable_get('@except')).to eq([:except])
+    end
+
+    it 'should read serializer options like "root"' do
+      expect(described_class.build_options_from_endpoint(endpoint).keys).to include :root
     end
   end
 end
