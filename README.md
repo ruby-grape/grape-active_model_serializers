@@ -151,6 +151,8 @@ class PostSerializer < ActiveModel::Serializer
 end
 ```
 
+*Note*: in the [0.9.x stable version of active model serializers](https://github.com/rails-api/active_model_serializers/tree/0-9-stable#customizing-scope), you have to access current user on scope -  so `scope.current_user`.
+
 ### Full Example
 
 ```ruby
