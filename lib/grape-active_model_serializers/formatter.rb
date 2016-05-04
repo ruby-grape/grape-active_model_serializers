@@ -15,8 +15,12 @@ module Grape
         def fetch_serializer(resource, env)
           endpoint = env['api.endpoint']
           options = build_options_from_endpoint(endpoint)
+          ams_options = {}.tap do |ns|
+            # Extracting declared version from Grape
+            ns[:namespace] = options[:version].try(:classify) if options.try(:[], :version)
+          end
 
-          serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource))
+          serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource, ams_options))
           return nil unless serializer
 
           options[:scope] = endpoint unless options.key?(:scope)
@@ -28,7 +32,7 @@ module Grape
         def other_options(env)
           options = {}
           ams_meta = env['ams_meta'] || {}
-          meta =  ams_meta.delete(:meta)
+          meta = ams_meta.delete(:meta)
           meta_key = ams_meta.delete(:meta_key)
           options[:meta_key] = meta_key if meta && meta_key
           options[meta_key || :meta] = meta if meta

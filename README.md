@@ -5,6 +5,8 @@ Use [active_model_serializers](https://github.com/rails-api/active_model_seriali
 [![Build Status](https://api.travis-ci.org/jrhe/grape-active_model_serializers.png)](http://travis-ci.org/jrhe/grape-active_model_serializers) [![Dependency Status](https://gemnasium.com/jrhe/grape-active_model_serializers.png)](https://gemnasium.com/jrhe/grape-active_model_serializers) [![Code Climate](https://codeclimate.com/github/jrhe/grape-active_model_serializers.png)](https://codeclimate.com/github/jrhe/grape-active_model_serializers)
 
 ## Breaking Changes
+#### v1.4.0
+* *BREAKING* Changes behaviour in serializer namespacing when using Grape API versioning. See [API versioning](https://github.com/jrhe/grape-active_model_serializers#api-versioning)
 #### v1.0.0
 * *BREAKING* Changes behaviour of root keys when serialising arrays. See [Array roots](https://github.com/jrhe/grape-active_model_serializers#array-roots)
 
@@ -77,6 +79,83 @@ get "people" do
 end
 # root = people
 ```
+
+### API versioning
+
+If you haven't declared an API version in Grape, nothing change.
+
+If your Grape API is versioned, which means you have declared at least one version in Grape, ie:
+
+```ruby
+module CandyBar
+  class Core < Grape::API
+    version 'candy_bar', using: :header, vendor: 'acme'
+
+    # My shiny endpoints
+    # ...
+  end
+end
+
+module Chocolate
+  class Core < Grape::API
+    version 'chocolate', using: :header, vendor: 'acme'
+
+    # My shiny endpoints
+    # ...    
+  end
+end
+
+class API < Grape::API  
+  format :json
+  formatter :json, Grape::Formatter::ActiveModelSerializers
+
+  mount CandyBar::Core
+  mount Chocolate::Core  
+end
+```
+
+You'll have to namespace your serializers according to each version, ie:
+
+```ruby
+module CandyBar
+  class UserSerializer < ActiveModel::Serializer
+    attributes :first_name, :last_name, :email
+  end
+end
+
+module Chocolate
+  class UserSerializer < ActiveModel::Serializer
+    attributes :first_name, :last_name
+  end
+end
+```
+
+Which allow you to keep your serializers easier to maintain and more organized.
+
+```
+app
+└── api
+    ├── chocolate
+        └── core.rb
+    └── candy_bar
+        └── core.rb
+    api.rb
+└── serializers
+    ├── chocolate
+        └── user_serializer.rb
+    └── candy_bar
+        └── user_serializer.rb
+```
+
+or alternatively:
+
+```
+└── serializers
+    ├── chocolate_user_serializer.rb
+    └── candy_bar_user_serializer.rb
+```
+
+Thus, ActiveModelSerializer will fetch automatically the right serializer to render.
 
 ### Manually specifying serializer options
 
@@ -185,6 +264,8 @@ Enjoy :)
 #### Next
 * Adds support for Grape 0.10.x
 
+#### v1.4.0
+* Adds support for active model serializer namespace
 
 #### v1.2.1
 * Adds support for active model serializer 0.9.x
