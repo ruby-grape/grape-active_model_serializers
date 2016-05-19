@@ -1,20 +1,20 @@
 # Contributing to Grape-Swagger
 
-This project is work of [many contributors](https://github.com/jrhe/grape-active_model_serializers/graphs/contributors).
-You're encouraged to submit [pull requests](https://github.com/jrhe/grape-active_model_serializers/pulls),
-[propose features and discuss issues](https://github.com/jrhe/grape-active_model_serializers/issues).
+This project is work of [many contributors](https://github.com/ruby-grape/grape-active_model_serializers/graphs/contributors).
+You're encouraged to submit [pull requests](https://github.com/ruby-grape/grape-active_model_serializers/pulls),
+[propose features and discuss issues](https://github.com/ruby-grape/grape-active_model_serializers/issues).
 When in doubt, ask a question in the [Grape Google Group](http://groups.google.com/group/ruby-grape).
 
 In the examples below, substitute your Github username for `contributor` in URLs.
 
 ## Fork the Project
 
-Fork the [project on Github](https://github.com/jrhe/grape-active_model_serializers) and check out your copy.
+Fork the [project on Github](https://github.com/ruby-grape/grape-active_model_serializers) and check out your copy.
 
 ```
 git clone https://github.com/contributor/grape-active_model_serializers.git
 cd grape-active_model_serializers
-git remote add upstream https://github.com/jrhe/grape-active_model_serializers.git
+git remote add upstream https://github.com/ruby-grape/grape-active_model_serializers.git
 ```
 
 ## Create a Topic Branch
@@ -103,7 +103,7 @@ git push origin my-feature-branch -f
 Update the [CHANGELOG](CHANGELOG.md) with the pull request number. A typical entry looks as follows.
 
 ```
-* [#123](https://github.com/jrhe/grape-active_model_serializers/pull/123): Reticulated splines - [@contributor](https://github.com/contributor).
+* [#123](https://github.com/ruby-grape/grape-active_model_serializers/pull/123): Reticulated splines - [@contributor](https://github.com/contributor).
 ```
 
 Amend your previous commit and force push the changes.
