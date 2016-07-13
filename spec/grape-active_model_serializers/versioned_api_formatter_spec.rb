@@ -46,7 +46,10 @@ describe Grape::Formatter::ActiveModelSerializers do
         end
       end
 
-      subject { described_class.fetch_serializer(user, env) }
+      let(:options) { described_class.build_options(user, env) }
+      subject { described_class.fetch_serializer(user, options) }
+
+      let(:instance_options) { subject.instance_variable_get(:@instance_options) }
 
       it { should be_a V1::UserSerializer }
 
@@ -55,8 +58,8 @@ describe Grape::Formatter::ActiveModelSerializers do
       end
 
       it 'should read default serializer options' do
-        expect(subject.instance_variable_get('@only')).to eq([:only])
-        expect(subject.instance_variable_get('@except')).to eq([:except])
+        expect(instance_options[:only]).to eq(:only)
+        expect(instance_options[:except]).to eq(:except)
       end
 
       it 'should read serializer options like "root"' do

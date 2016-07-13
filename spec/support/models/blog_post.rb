@@ -1,6 +1,11 @@
 class BlogPost
-  include ActiveModel::SerializerSupport
+  include ActiveModel::Serialization
+
   attr_accessor :title, :body
+
+  def self.model_name
+    to_s
+  end
 
   def initialize(params = {})
     params.each do |k, v|

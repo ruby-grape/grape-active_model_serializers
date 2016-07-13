@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.licenses      = ['MIT']
 
   gem.add_dependency 'grape'
-  gem.add_dependency 'active_model_serializers', '>= 0.9.0'
+  gem.add_dependency 'active_model_serializers', '>= 0.10.0'
 
   gem.add_development_dependency 'listen', '~> 3.0.7'
   gem.add_development_dependency 'rspec'

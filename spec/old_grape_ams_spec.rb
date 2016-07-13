@@ -10,6 +10,7 @@ describe Grape::ActiveModelSerializers do
   subject { last_response.body }
 
   before do
+    ActiveModelSerializers.config.adapter = :json
     app.format :json
     app.formatter :json, Grape::Formatter::ActiveModelSerializers
   end
