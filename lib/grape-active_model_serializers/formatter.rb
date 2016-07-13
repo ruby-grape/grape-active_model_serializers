@@ -20,7 +20,12 @@ module Grape
             ns[:namespace] = options[:version].try(:classify) if options.try(:[], :version)
           end
 
-          serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource, ams_options))
+          serializer = if options[:serializer]
+                         options[:serializer]
+                       else
+                         ActiveModel::Serializer.serializer_for(resource, ams_options)
+                       end
+
           return nil unless serializer
 
           options[:scope] = endpoint unless options.key?(:scope)
