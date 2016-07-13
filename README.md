@@ -14,6 +14,12 @@ gem 'grape-active_model_serializers'
 
 See [UPGRADING](UPGRADING.md) if you're upgrading from a previous version.
 
+## Dependencies
+
+* >= Ruby v2.2
+* >= [grape](https://github.com/intridea/grape) v0.8.0
+* >= [active_model_serializers](https://github.com/rails-api/active_model_serializers) v0.10.0
+
 ## Usage
 
 ### Require grape-active_model_serializers
