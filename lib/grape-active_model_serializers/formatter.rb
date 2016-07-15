@@ -3,44 +3,72 @@ module Grape
     module ActiveModelSerializers
       class << self
         def call(resource, env)
-          serializer = fetch_serializer(resource, env)
+          options = build_options(resource, env)
+          serializer = fetch_serializer(resource, options)
 
           if serializer
-            serializer.to_json
+            ::ActiveModelSerializers::Adapter.create(
+              serializer, options
+            ).to_json
           else
             Grape::Formatter::Json.call resource, env
           end
         end
 
-        def fetch_serializer(resource, env)
+        def build_options(resource, env)
           endpoint = env['api.endpoint']
           options = build_options_from_endpoint(endpoint)
-          ams_options = {}.tap do |ns|
-            # Extracting declared version from Grape
-            ns[:namespace] = options[:version].try(:classify) if options.try(:[], :version)
-          end
-
-          serializer = options.fetch(:serializer, ActiveModel::Serializer.serializer_for(resource, ams_options))
-          return nil unless serializer
 
           options[:scope] = endpoint unless options.key?(:scope)
-          # ensure we have an root to fallback on
-          options[:resource_name] = default_root(endpoint) if resource.respond_to?(:to_ary)
-          serializer.new(resource, options.merge(other_options(env)))
+
+          # ensure we have a root to fallback on
+          if resource.respond_to?(:to_ary) && !options.key?(:root)
+            options[:root] = default_root(endpoint)
+          end
+
+          options.merge(meta_options(env))
         end
 
-        def other_options(env)
+        def fetch_serializer(resource, options)
+          # use serializer specified by options
+          serializer = options[:serializer]
+
+          if serializer.nil?
+            # fetch serializer leverage AMS lookup
+            serializer = ActiveModel::Serializer.serializer_for(resource)
+            # if grape version exists, attempt to apply version namespacing
+            serializer = namespace_serializer(serializer, options[:version])
+          end
+
+          return nil unless serializer
+
+          serializer.new(resource, options)
+        end
+
+        def namespace_serializer(serializer, namespace)
+          "#{namespace.try(:classify)}::#{serializer}".constantize
+        rescue NameError
+          serializer
+        end
+
+        def meta_options(env)
           options = {}
           ams_meta = env['ams_meta'] || {}
           meta = ams_meta.delete(:meta)
           meta_key = ams_meta.delete(:meta_key)
           options[:meta_key] = meta_key if meta && meta_key
-          options[meta_key || :meta] = meta if meta
+          options[:meta] = meta if meta
           options
         end
 
         def build_options_from_endpoint(endpoint)
-          [endpoint.default_serializer_options || {}, endpoint.namespace_options, endpoint.route_options, endpoint.options, endpoint.options.fetch(:route_options)].reduce(:merge)
+          [
+            endpoint.default_serializer_options || {},
+            endpoint.namespace_options,
+            endpoint.route_options,
+            endpoint.options,
+            endpoint.options.fetch(:route_options)
+          ].reduce(:merge)
         end
 
         # array root is the innermost namespace name ('space') if there is one,

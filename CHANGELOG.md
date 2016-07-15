@@ -2,7 +2,7 @@
 
 ### 1.5.0 (Next)
 
-* Your contribution here.
+* [#54](https://github.com/ruby-grape/grape-active_model_serializers/pull/54): Adding support for ASM v0.10. Drops support for ASM v0.9 - [@drn](https://github.com/drn).
 
 ### 1.4.0 (July 14, 2016)
 

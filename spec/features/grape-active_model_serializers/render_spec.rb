@@ -5,6 +5,7 @@ describe '#render' do
   let(:app) { Class.new(Grape::API) }
 
   before do
+    ActiveModelSerializers.config.adapter = :json
     app.format :json
     app.formatter :json, Grape::Formatter::ActiveModelSerializers
   end

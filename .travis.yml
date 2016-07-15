@@ -24,7 +24,6 @@ matrix:
       env: GRAPE_VERSION=HEAD
     - rvm: 2.3.0
     - rvm: 2.2.5
-    - rvm: 2.1
     - rvm: rbx-2
     - rvm: jruby-19mode
     - rvm: ruby-head
