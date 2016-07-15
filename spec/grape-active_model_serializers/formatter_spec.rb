@@ -19,18 +19,22 @@ describe Grape::Formatter::ActiveModelSerializers do
     end
 
     it 'should read serializer options like "root"' do
-      expect(described_class.build_options_from_endpoint(app.endpoints.first)).to include :root
+      expect(
+        described_class.build_options_from_endpoint(app.endpoints.first)
+      ).to include(:root)
     end
   end
 
   describe '.fetch_serializer' do
     let(:user) { User.new(first_name: 'John') }
 
+    let(:params) { { path: '/', method: 'foo', root: false } }
     if Grape::Util.const_defined?('InheritableSetting')
-      let(:endpoint) { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, path: '/', method: 'foo', root: false) }
+      let(:setting) { Grape::Util::InheritableSetting.new }
     else
-      let(:endpoint) { Grape::Endpoint.new({}, path: '/', method: 'foo', root: false) }
+      let(:setting) { {} }
     end
+    let(:endpoint) { Grape::Endpoint.new(setting, params) }
 
     let(:env) { { 'api.endpoint' => endpoint } }
 
@@ -61,7 +65,9 @@ describe Grape::Formatter::ActiveModelSerializers do
     end
 
     it 'should read serializer options like "root"' do
-      expect(described_class.build_options_from_endpoint(endpoint).keys).to include :root
+      expect(
+        described_class.build_options_from_endpoint(endpoint).keys
+      ).to include(:root)
     end
   end
 end
