@@ -10,9 +10,6 @@
 Metrics/AbcSize:
   Max: 20
 
-Metrics/LineLength:
-  Max: 179
-
 # Offense count: 7
 Style/Documentation:
   Enabled: false

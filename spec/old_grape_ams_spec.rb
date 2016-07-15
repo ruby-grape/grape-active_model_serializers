@@ -31,31 +31,48 @@ describe Grape::ActiveModelSerializers do
     end
     it 'uses the built in grape serializer' do
       get('/home')
-      expect(subject).to eql "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
+      expect(subject).to eq(
+        '{"user":{"first_name":"JR","last_name":"HE"}}'
+      )
     end
   end
 
   context "serializer isn't set" do
     before do
       app.get('/home') do
-        User.new(first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk')
+        User.new(
+          first_name: 'JR',
+          last_name:  'HE',
+          email:      'contact@jrhe.co.uk'
+        )
       end
     end
 
     it 'infers the serializer' do
       get '/home'
-      expect(subject).to eql "{\"user\":{\"first_name\":\"JR\",\"last_name\":\"HE\"}}"
+      expect(subject).to eq(
+        '{"user":{"first_name":"JR","last_name":"HE"}}'
+      )
     end
   end
 
   it 'serializes arrays of objects' do
     app.get('/users') do
-      user = User.new(first_name: 'JR', last_name: 'HE', email: 'contact@jrhe.co.uk')
+      user = User.new(
+        first_name: 'JR',
+        last_name:  'HE',
+        email:      'contact@jrhe.co.uk'
+      )
       [user, user]
     end
 
     get '/users'
-    expect(subject).to eql "{\"users\":[{\"first_name\":\"JR\",\"last_name\":\"HE\"},{\"first_name\":\"JR\",\"last_name\":\"HE\"}]}"
+    expect(subject).to eq(
+      '{"users":['\
+        '{"first_name":"JR","last_name":"HE"},'\
+        '{"first_name":"JR","last_name":"HE"}'\
+      ']}'
+    )
   end
 
   context 'models with compound names' do
@@ -65,17 +82,29 @@ describe Grape::ActiveModelSerializers do
       end
 
       get '/home'
-      expect(subject).to eql "{\"blog_post\":{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}}"
+      expect(subject).to eq(
+        '{"blog_post":'\
+          '{"title":"Grape AM::S Rocks!","body":"Really, it does."}'\
+        '}'
+      )
     end
 
     it "generates the proper 'root' node for serialized arrays" do
       app.get('/blog_posts') do
-        blog_post = BlogPost.new(title: 'Grape AM::S Rocks!', body: 'Really, it does.')
+        blog_post = BlogPost.new(
+          title: 'Grape AM::S Rocks!',
+          body:  'Really, it does.'
+        )
         [blog_post, blog_post]
       end
 
       get '/blog_posts'
-      expect(subject).to eql "{\"blog_posts\":[{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"},{\"title\":\"Grape AM::S Rocks!\",\"body\":\"Really, it does.\"}]}"
+      expect(subject).to eq(
+        '{"blog_posts":['\
+          '{"title":"Grape AM::S Rocks!","body":"Really, it does."},'\
+          '{"title":"Grape AM::S Rocks!","body":"Really, it does."}'\
+        ']}'
+      )
     end
   end
 
@@ -87,7 +116,9 @@ describe Grape::ActiveModelSerializers do
     end
 
     get '/admin/jeff'
-    expect(subject).to eql "{\"user\":{\"first_name\":\"Jeff\",\"last_name\":null}}"
+    expect(subject).to eq(
+      '{"user":{"first_name":"Jeff","last_name":null}}'
+    )
   end
 
   context 'route is in a namespace' do
@@ -100,7 +131,12 @@ describe Grape::ActiveModelSerializers do
       end
 
       get '/admin/jeff'
-      expect(subject).to eql "{\"admin\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
+      expect(subject).to eq(
+        '{"admin":['\
+          '{"first_name":"Jeff","last_name":null},'\
+          '{"first_name":"Jeff","last_name":null}'\
+        ']}'
+      )
     end
   end
 
@@ -112,7 +148,12 @@ describe Grape::ActiveModelSerializers do
       end
 
       get '/people'
-      expect(subject).to eql "{\"people\":[{\"first_name\":\"Jeff\",\"last_name\":null},{\"first_name\":\"Jeff\",\"last_name\":null}]}"
+      expect(subject).to eq(
+        '{"people":['\
+          '{"first_name":"Jeff","last_name":null},'\
+          '{"first_name":"Jeff","last_name":null}'\
+        ']}'
+      )
     end
   end
 end

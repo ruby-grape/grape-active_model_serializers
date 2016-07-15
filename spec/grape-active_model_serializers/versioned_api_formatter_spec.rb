@@ -15,25 +15,34 @@ describe Grape::Formatter::ActiveModelSerializers do
 
         app.namespace('space') do |ns|
           ns.get('/', root: false, apiver: 'v1') do
-            { user: { first_name: 'JR', last_name: 'HE', email: 'jrhe@github.com' } }
+            {
+              user: {
+                first_name: 'JR',
+                last_name:  'HE',
+                email:      'jrhe@github.com'
+              }
+            }
           end
         end
       end
 
       it 'should read serializer options like "root"' do
-        expect(described_class.build_options_from_endpoint(app.endpoints.first)).to include :root
+        expect(
+          described_class.build_options_from_endpoint(app.endpoints.first)
+        ).to include(:root)
       end
     end
 
     describe '.fetch_serializer' do
       let(:user) { User.new(first_name: 'John', email: 'j.doe@internet.com') }
 
+      let(:params) { { path: '/', method: 'foo', version: 'v1', root: false } }
       if Grape::Util.const_defined?('InheritableSetting')
-        let(:endpoint) { Grape::Endpoint.new(Grape::Util::InheritableSetting.new, path: '/', method: 'foo', version: 'v1', root: false) }
+        let(:setting) { Grape::Util::InheritableSetting.new }
       else
-        let(:endpoint) { Grape::Endpoint.new({}, path: '/', method: 'foo', version: 'v1', root: false) }
+        let(:setting) { {} }
       end
-
+      let(:endpoint) { Grape::Endpoint.new(setting, params) }
       let(:env) { { 'api.endpoint' => endpoint } }
 
       before do
@@ -49,7 +58,7 @@ describe Grape::Formatter::ActiveModelSerializers do
       let(:options) { described_class.build_options(user, env) }
       subject { described_class.fetch_serializer(user, options) }
 
-      let(:instance_options) { subject.instance_variable_get(:@instance_options) }
+      let(:instance_options) { subject.send(:instance_options) }
 
       it { should be_a V1::UserSerializer }
 
@@ -63,7 +72,9 @@ describe Grape::Formatter::ActiveModelSerializers do
       end
 
       it 'should read serializer options like "root"' do
-        expect(described_class.build_options_from_endpoint(endpoint).keys).to include :root
+        expect(
+          described_class.build_options_from_endpoint(endpoint).keys
+        ).to include(:root)
       end
     end
   end

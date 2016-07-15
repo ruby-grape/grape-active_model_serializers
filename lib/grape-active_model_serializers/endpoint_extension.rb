@@ -30,7 +30,9 @@ module Grape
 
       base.class_eval do
         def serialization_scope
-          send(_serialization_scope) if _serialization_scope && respond_to?(_serialization_scope, true)
+          return unless _serialization_scope
+          return unless respond_to?(_serialization_scope, true)
+          send(_serialization_scope)
         end
       end
     end
