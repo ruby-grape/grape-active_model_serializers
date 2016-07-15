@@ -1,6 +1,10 @@
 ## Changelog
 
-### 1.4.0 (Next)
+### 1.5.0 (Next)
+
+* Your contribution here.
+
+### 1.4.0 (July 14, 2016)
 
 * [#49](https://github.com/jrhe/grape-active_model_serializers/pull/49): Adds support for active model serializer namespace - [@syntaxTerr0r](https://github.com/syntaxTerr0r).
 * [#36](https://github.com/jrhe/grape-active_model_serializers/pull/36), [#50](https://github.com/jrhe/grape-active_model_serializers/pull/50): Added support through Grape 0.16.x - [@dblock](https://github.com/dblock).
