@@ -33,15 +33,19 @@ module Grape
           # use serializer specified by options
           serializer = options[:serializer]
 
-          if serializer.nil?
+          begin
             # fetch serializer leverage AMS lookup
             serializer = ActiveModel::Serializer.serializer_for(resource)
             # if grape version exists, attempt to apply version namespacing
             serializer = namespace_serializer(serializer, options[:version])
-          end
+          rescue LoadError
+            # attempt to fetch serializer through namespace inference
+            serializer = namespace_inferred_serializer(options)
+          end if serializer.nil?
 
           return nil unless serializer
 
+          options.merge!(collection_serializer_options(serializer, options))
           serializer.new(resource, options)
         end
 
@@ -49,6 +53,24 @@ module Grape
           "#{namespace.try(:classify)}::#{serializer}".constantize
         rescue NameError
           serializer
+        end
+
+        def collection_serializer_options(serializer, options)
+          return {} if options.keys.include?(:serializer)
+          if serializer == ActiveModel::Serializer::CollectionSerializer
+            inferred_serializer = namespace_inferred_serializer(options)
+            inferred_serializer ? { serializer: inferred_serializer } : {}
+          else
+            {}
+          end
+        end
+
+        def namespace_inferred_serializer(options)
+          klass = options[:for]
+          return nil if klass.nil?
+          "#{klass.to_s.classify}Serializer".constantize
+        rescue NameError
+          nil
         end
 
         def meta_options(env)
