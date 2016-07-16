@@ -18,10 +18,11 @@ describe Grape::Formatter::ActiveModelSerializers do
       end
     end
 
+    let(:env) { { 'api.endpoint' => app.endpoints.first } }
+    let(:options) { described_class.build_options(nil, env) }
+
     it 'should read serializer options like "root"' do
-      expect(
-        described_class.build_options_from_endpoint(app.endpoints.first)
-      ).to include(:root)
+      expect(options).to include(:root)
     end
   end
 
@@ -65,9 +66,7 @@ describe Grape::Formatter::ActiveModelSerializers do
     end
 
     it 'should read serializer options like "root"' do
-      expect(
-        described_class.build_options_from_endpoint(endpoint).keys
-      ).to include(:root)
+      expect(options).to include(:root)
     end
   end
 end
