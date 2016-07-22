@@ -9,7 +9,7 @@ module Grape
     attr_accessor :controller_name
 
     def namespace_options
-      if self.respond_to?(:inheritable_setting)
+      if respond_to?(:inheritable_setting)
         inheritable_setting.namespace
       else
         settings[:namespace] ? settings[:namespace].options : {}
@@ -17,7 +17,7 @@ module Grape
     end
 
     def route_options
-      if self.respond_to?(:inheritable_setting)
+      if respond_to?(:inheritable_setting)
         inheritable_setting.route
       else
         options[:route_options]
