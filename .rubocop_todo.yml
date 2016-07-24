@@ -18,7 +18,3 @@ Style/Documentation:
 # Configuration parameters: Exclude.
 Style/FileName:
   Enabled: false
-
-# Offense count: 4
-Style/RegexpLiteral:
-  MaxSlashes: 0

@@ -9,7 +9,7 @@ module Grape
       def options
         @options ||= (
           options = endpoint_options
-          options.merge!(scope: endpoint) unless options.key?(:scope)
+          options[:scope] = endpoint unless options.key?(:scope)
           options.merge!(default_root_options) unless options.key?(:root)
           options.merge!(meta_options)
           options

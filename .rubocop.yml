@@ -1,5 +1,9 @@
 inherit_from: .rubocop_todo.yml
+
 AllCops:
   Exclude:
     - Guardfile
     - grape-active_model_serializers.gemspec
+
+Style/BlockDelimiters:
+  Enabled: false
