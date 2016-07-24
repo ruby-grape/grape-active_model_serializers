@@ -2,6 +2,10 @@
 
 ### 1.5.0 (Next)
 
+* [#61](https://github.com/ruby-grape/grape-active_model_serializers/pull/61): Adds support for collection serializers - [@drn](https://github.com/drn).
+* [#60](https://github.com/ruby-grape/grape-active_model_serializers/pull/60): Namespace serializer inference - [@drn](https://github.com/drn).
+* [#59](https://github.com/ruby-grape/grape-active_model_serializers/pull/59): Refactor option and serializer resolution - [@drn](https://github.com/drn).
+* [#57](https://github.com/ruby-grape/grape-active_model_serializers/pull/57): Solve line length linter issues - [@drn](https://github.com/drn).
 * [#54](https://github.com/ruby-grape/grape-active_model_serializers/pull/54): Adding support for ASM v0.10. Drops support for ASM v0.9 - [@drn](https://github.com/drn).
 
 ### 1.4.0 (July 14, 2016)
@@ -11,8 +15,8 @@
 
 ### v1.3.2 (February 27, 2015)
 
-* [#39](https://github.com/ruby-grape/grape-active_model_serializers/pull/39): Look for namespace and other options to configure serializers - [@jwkoelewijn](https://github.com/jwkoelewijn).
 * [#40](https://github.com/ruby-grape/grape-active_model_serializers/pull/40): Use env to pass AMS meta around - [@dblock](https://github.com/dblock).
+* [#39](https://github.com/ruby-grape/grape-active_model_serializers/pull/39): Look for namespace and other options to configure serializers - [@jwkoelewijn](https://github.com/jwkoelewijn).
 
 ### v1.3.1 (November 20, 2014)
 
