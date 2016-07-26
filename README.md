@@ -2,6 +2,7 @@
 
 Use [active_model_serializers](https://github.com/rails-api/active_model_serializers) with [Grape](https://github.com/intridea/grape)!
 
+[![Gem Version](https://badge.fury.io/rb/grape-active_model_serializers.svg)](https://badge.fury.io/rb/grape-active_model_serializers)
 [![Build Status](https://api.travis-ci.org/ruby-grape/grape-active_model_serializers.svg)](http://travis-ci.org/ruby-grape/grape-active_model_serializers) [![Dependency Status](https://gemnasium.com/ruby-grape/grape-active_model_serializers.svg)](https://gemnasium.com/ruby-grape/grape-active_model_serializers) [![Code Climate](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers.svg)](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers)
 
 ## Installation
