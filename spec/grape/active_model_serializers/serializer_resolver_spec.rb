@@ -1,11 +1,12 @@
+require 'pry'
 require 'spec_helper'
 
 # asserts serializer resolution order:
 #   1. resource_defined_class     # V1::UserSerializer
-#   2. collection_class           # CollectionSerializer
-#   3. options[:serializer]       # V2::UserSerializer
-#   4. namespace_inferred_class   # V3::UserSerializer
-#   5. version_inferred_class     # V4::UserSerializer
+#   2. collection_class           # CollectionSerializer, V2::UserSerializer
+#   3. options[:serializer]       # V3::UserSerializer
+#   4. namespace_inferred_class   # V4::UserSerializer
+#   5. version_inferred_class     # V5::UserSerializer
 #   6. resource_serializer_class  # UserSerializer
 #   7. missing resource           # nil
 
@@ -15,15 +16,15 @@ describe Grape::ActiveModelSerializers::SerializerResolver do
   let(:options) {
     {
       serializer: options_serializer_class, # options defined
-      for:        V3::UsersApi,             # namespace inference
-      version:    'v4'                      # version inference
+      for:        V4::UsersApi,             # namespace inference
+      version:    'v5'                      # version inference
     }
   }
   # resource defined
   let(:resource_defined?) { true }
   let(:defined_serializer_class) { V1::UserSerializer }
   # options defined
-  let(:options_serializer_class) { V2::UserSerializer }
+  let(:options_serializer_class) { V3::UserSerializer }
 
   let(:serializer) { resolver.serializer }
 
@@ -51,12 +52,55 @@ describe Grape::ActiveModelSerializers::SerializerResolver do
       it 'returns serializer' do
         expect(serializer).to be_kind_of(serializer_class)
       end
+
+      context 'each serializer' do
+        let(:options) {
+          super().except(:serializer).merge(
+            each_serializer: V2::UserSerializer
+          )
+        }
+        let(:each_serializer) { serializer.send(:options)[:serializer] }
+
+        context 'each_serializer option' do
+          it 'returns expected serializer' do
+            expect(each_serializer).to eq(V2::UserSerializer)
+          end
+        end
+
+        context 'no each_serializer option' do
+          let(:options) { super().except(:each_serializer) }
+
+          context 'namespace inferred' do
+            it 'returns expected serializer' do
+              expect(each_serializer).to eq(V4::UserSerializer)
+            end
+          end
+
+          context 'not namespace inferred' do
+            let(:options) { super().except(:for) }
+
+            context 'version inferred' do
+              it 'returns expected serializer' do
+                expect(each_serializer).to eq(V5::UserSerializer)
+              end
+            end
+
+            context 'not version inferred' do
+              let(:options) { super().except(:version) }
+
+              it 'returns nil' do
+                expect(each_serializer).to eq(nil)
+              end
+            end
+          end
+        end
+      end
     end
 
     context 'not resource collection' do
       context 'specified by options' do
         it 'returns specified serializer' do
-          expect(serializer).to be_kind_of(V2::UserSerializer)
+          expect(serializer).to be_kind_of(V3::UserSerializer)
         end
       end
 
@@ -65,7 +109,7 @@ describe Grape::ActiveModelSerializers::SerializerResolver do
 
         context 'namespace inferred' do
           it 'returns inferred serializer' do
-            expect(serializer).to be_kind_of(V3::UserSerializer)
+            expect(serializer).to be_kind_of(V4::UserSerializer)
           end
         end
 
@@ -74,7 +118,7 @@ describe Grape::ActiveModelSerializers::SerializerResolver do
 
           context 'version inferred' do
             it 'returns inferred serializer' do
-              expect(serializer).to be_kind_of(V4::UserSerializer)
+              expect(serializer).to be_kind_of(V5::UserSerializer)
             end
           end
 

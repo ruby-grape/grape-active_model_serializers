@@ -7,9 +7,7 @@ module Grape
       end
 
       def serializer
-        @serializer ||= (
-          serializer_class.new(resource, options) if serializer_class
-        )
+        serializer_class.new(resource, serializer_options) if serializer_class
       end
 
       private
@@ -17,13 +15,32 @@ module Grape
       attr_accessor :resource, :options
 
       def serializer_class
-        serializer_class = resource_defined_class
-        serializer_class ||= collection_class
-        serializer_class ||= options[:serializer]
+        return @serializer_class if defined?(@serializer_class)
+        @serializer_class = resource_defined_class
+        @serializer_class ||= collection_class
+        @serializer_class ||= options[:serializer]
+        @serializer_class ||= namespace_inferred_class
+        @serializer_class ||= version_inferred_class
+        @serializer_class ||= resource_serializer_class
+      end
+
+      def serializer_options
+        if collection_serializer? && !options.key?(:serializer)
+          options.merge(each_serializer_option)
+        else
+          options
+        end
+      end
+
+      def collection_serializer?
+        serializer_class == ActiveModel::Serializer.config.collection_serializer
+      end
+
+      def each_serializer_option
+        serializer_class = options[:each_serializer]
         serializer_class ||= namespace_inferred_class
         serializer_class ||= version_inferred_class
-        serializer_class ||= resource_serializer_class
-        serializer_class
+        serializer_class ? { serializer: serializer_class } : {}
       end
 
       def resource_defined_class
@@ -36,12 +53,13 @@ module Grape
       end
 
       def namespace_inferred_class
-        return nil unless options[:for]
+        return nil unless options.key?(:for)
         namespace = options[:for].to_s.deconstantize
         "#{namespace}::#{resource_serializer_klass}".safe_constantize
       end
 
       def version_inferred_class
+        return nil unless options.key?(:version)
         "#{version}::#{resource_serializer_klass}".safe_constantize
       end
 
@@ -57,12 +75,20 @@ module Grape
       end
 
       def resource_klass
-        resource.class.name.demodulize
+        resource_class.name.demodulize
       end
 
       def resource_namespace
-        klass = resource.class.name.deconstantize
+        klass = resource_class.name.deconstantize
         klass.empty? ? nil : klass
+      end
+
+      def resource_class
+        if resource.respond_to?(:to_ary)
+          resource.try(:klass) || resource.compact.first.class
+        else
+          resource.class
+        end
       end
 
       def resource_serializer_class
