@@ -1,6 +1,10 @@
 ## Changelog
 
-### 1.5.0 (Next)
+### 1.5.1 (Next)
+
+* ...
+
+### 1.5.0 (August 24, 2016)
 
 * [#61](https://github.com/ruby-grape/grape-active_model_serializers/pull/61): Adds support for collection serializers - [@drn](https://github.com/drn).
 * [#60](https://github.com/ruby-grape/grape-active_model_serializers/pull/60): Namespace serializer inference - [@drn](https://github.com/drn).
