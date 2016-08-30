@@ -37,8 +37,10 @@ module Grape
       end
     end
 
-    def render(resources, meta = {})
-      env['ams_meta'] = meta
+    def render(resources, extra_options = {})
+      extra_options.symbolize_keys!
+      env['ams_meta'] = extra_options.slice(:meta, :meta_key)
+      env['ams_adapter_options'] = extra_options.except(:meta, :meta_key)
       resources
     end
 

@@ -12,6 +12,7 @@ module Grape
           options[:scope] = endpoint unless options.key?(:scope)
           options.merge!(default_root_options) unless options.key?(:root)
           options.merge!(meta_options)
+          options.merge!(adapter_options)
           options
         )
       end
@@ -62,6 +63,10 @@ module Grape
         options[:meta] = meta if meta
         options[:meta_key] = meta_key if meta && meta_key
         options
+      end
+
+      def adapter_options
+        env['ams_adapter_options'] || {}
       end
     end
   end

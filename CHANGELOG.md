@@ -2,8 +2,9 @@
 
 ### 1.5.1 (Next)
 
-* [#65](https://github.com/ruby-grape/grape-active_model_serializers/pull/65): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 * Your contribution here.
+* [#65](https://github.com/ruby-grape/grape-active_model_serializers/pull/65): Added Danger, PR linter - [@dblock](https://github.com/dblock).
+* [#63](https://github.com/ruby-grape/grape-active_model_serializers/pull/63): Pass adapter options through render - [@drn](https://github.com/drn).
 
 ### 1.5.0 (August 24, 2016)
 
