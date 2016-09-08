@@ -71,7 +71,7 @@ describe Grape::ActiveModelSerializers::OptionsBuilder do
     end
 
     context 'adapter options' do
-      let(:env) { super().merge('ams_adapter_options' => adapter_options) }
+      let(:env) { super().merge('ams_adapter' => adapter_options) }
       let(:adapter_options) { {} }
 
       context 'adapter' do
@@ -89,6 +89,39 @@ describe Grape::ActiveModelSerializers::OptionsBuilder do
 
         it 'includes serializer as top-level option' do
           expect(options[:serializer]).to eq(serializer)
+        end
+      end
+
+      context 'each_serializer' do
+        let(:adapter_options) { { each_serializer: each_serializer } }
+        let(:each_serializer) { V2::UserSerializer }
+
+        it 'includes each_serializer as top-level option' do
+          expect(options[:each_serializer]).to eq(each_serializer)
+        end
+      end
+    end
+
+    context 'extra options' do
+      let(:env) { super().merge('ams_extra' => extra_options) }
+
+      context 'hash' do
+        let(:extra_options) { { extra: 'info' } }
+
+        it 'includes extra options in top-level options' do
+          expect(options.keys).to include(:extra)
+        end
+      end
+
+      context 'not a hash' do
+        let(:extra_options) { 'extra' }
+
+        it 'raises an exception' do
+          expect {
+            options
+          }.to raise_exception(
+            'Extra options must be a hash'
+          )
         end
       end
     end

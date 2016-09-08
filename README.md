@@ -177,11 +177,26 @@ resource :users do
   get '/:id' do
     if conditional
       # uses UserSerializer and configured default adapter automatically
-      user
+      current_user
     else
       # uses specified serializer and adapter
       render current_user, serializer: ErrorSerializer, adapter: :attributes
     end
+  end
+end
+```
+
+```ruby
+# Adhoc serializer options can be specified in the body of the route
+resource :users do
+  get '/:id' do
+    render current_user, extra: { adhoc_name_option: 'value' }
+  end
+end
+
+class UserSerializer
+  def name
+    instance_options[:adhoc_name_option] # accessible in instance_options
   end
 end
 ```
