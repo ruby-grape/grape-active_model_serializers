@@ -1,4 +1,3 @@
-require 'pry'
 require 'spec_helper'
 
 # asserts serializer resolution order:

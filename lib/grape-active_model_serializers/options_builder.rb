@@ -12,6 +12,8 @@ module Grape
           options[:scope] = endpoint unless options.key?(:scope)
           options.merge!(default_root_options) unless options.key?(:root)
           options.merge!(meta_options)
+          options.merge!(adapter_options)
+          options.merge!(extra_options)
           options
         )
       end
@@ -56,12 +58,22 @@ module Grape
 
       def meta_options
         options = {}
-        ams_meta = env['ams_meta'] || {}
-        meta = ams_meta[:meta]
-        meta_key = ams_meta[:meta_key]
+        meta_options = env['ams_meta'] || {}
+        meta = meta_options[:meta]
+        meta_key = meta_options[:meta_key]
         options[:meta] = meta if meta
         options[:meta_key] = meta_key if meta && meta_key
         options
+      end
+
+      def adapter_options
+        env['ams_adapter'] || {}
+      end
+
+      def extra_options
+        options = env['ams_extra'] || {}
+        return options if options.is_a?(Hash)
+        raise 'Extra options must be a hash'
       end
     end
   end

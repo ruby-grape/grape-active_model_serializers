@@ -150,10 +150,10 @@ Or as follows.
 
 ActiveModelSerializer will fetch automatically the right serializer to render.
 
-### Manually specifying serializer options
+### Manually specifying serializer / adapter options
 
 ```ruby
-# Serializer options can be specified on routes or namespaces.
+# Serializer and adapter options can be specified on routes or namespaces.
 namespace 'foo', serializer: BarSerializer do
   get "/" do
     # will use "bar" serializer
@@ -167,6 +167,36 @@ namespace 'foo', serializer: BarSerializer do
   # All standard options for `ActiveModel::Serializers` are supported.
   get "/fancy_homes", root: 'world', each_serializer: FancyHomesSerializer
   ...
+  end
+end
+```
+
+```ruby
+# Serializer and adapter options can also be specified in the body of the route
+resource :users do
+  get '/:id' do
+    if conditional
+      # uses UserSerializer and configured default adapter automatically
+      current_user
+    else
+      # uses specified serializer and adapter
+      render current_user, serializer: ErrorSerializer, adapter: :attributes
+    end
+  end
+end
+```
+
+```ruby
+# Adhoc serializer options can be specified in the body of the route
+resource :users do
+  get '/:id' do
+    render current_user, extra: { adhoc_name_option: 'value' }
+  end
+end
+
+class UserSerializer
+  def name
+    instance_options[:adhoc_name_option] # accessible in instance_options
   end
 end
 ```
