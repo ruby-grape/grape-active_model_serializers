@@ -48,8 +48,9 @@ module Grape
       end
 
       def collection_class
-        return nil unless resource.respond_to?(:to_ary)
-        ActiveModel::Serializer.config.collection_serializer
+        if resource.respond_to?(:to_ary) || resource.respond_to?(:all)
+          ActiveModel::Serializer.config.collection_serializer
+        end
       end
 
       def namespace_inferred_class
@@ -84,8 +85,10 @@ module Grape
       end
 
       def resource_class
-        if resource.respond_to?(:to_ary)
-          resource.try(:klass) || resource.compact.first.class
+        if resource.respond_to?(:klass)
+          resource.klass
+        elsif resource.respond_to?(:to_ary) || resource.respond_to?(:all)
+          resource.first.class
         else
           resource.class
         end
