@@ -4,6 +4,7 @@
 
 * Your contribution here.
 * [#74](https://github.com/ruby-grape/grape-active_model_serializers/pull/74): Add support for Sequel - [@drn](https://github.com/drn).
+* [#73](https://github.com/ruby-grape/grape-active_model_serializers/pull/73): Ensure all AMS options are passed through - [@drn](https://github.com/drn).
 * [#65](https://github.com/ruby-grape/grape-active_model_serializers/pull/65): Added Danger, PR linter - [@dblock](https://github.com/dblock).
 * [#63](https://github.com/ruby-grape/grape-active_model_serializers/pull/63): Pass adapter options through render - [@drn](https://github.com/drn).
 
