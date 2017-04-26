@@ -1,8 +1,11 @@
 ## Changelog
 
-### 1.5.1 (Next)
+### 1.5.2 (Next)
 
 * Your contribution here.
+
+### 1.5.1 (April 25, 2017)
+
 * [#74](https://github.com/ruby-grape/grape-active_model_serializers/pull/74): Add support for Sequel - [@drn](https://github.com/drn).
 * [#73](https://github.com/ruby-grape/grape-active_model_serializers/pull/73): Ensure all AMS options are passed through - [@drn](https://github.com/drn).
 * [#65](https://github.com/ruby-grape/grape-active_model_serializers/pull/65): Added Danger, PR linter - [@dblock](https://github.com/dblock).
