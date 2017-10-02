@@ -4,7 +4,11 @@ module Grape
       extend Base
 
       class << self
+        # rubocop:disable Metrics/CyclomaticComplexity
+        # rubocop:disable LineLength
         def call(message, backtrace, options = {}, env = nil, original_exception = nil)
+          # rubocop:enable Metrics/CyclomaticComplexity
+          # rubocop:enable LineLength
           result = wrap_message(present(message, env))
 
           rescue_options = options[:rescue_options] || {}
