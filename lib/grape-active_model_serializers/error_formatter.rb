@@ -1,3 +1,4 @@
+require 'multi_json'
 module Grape
   module ErrorFormatter
     module ActiveModelSerializers
