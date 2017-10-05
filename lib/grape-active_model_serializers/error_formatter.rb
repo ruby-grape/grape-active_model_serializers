@@ -13,7 +13,7 @@ module Grape
           end
           if rescue_options[:original_exception] && original_exception
             result = result
-            .merge(original_exception: original_exception.inspect)
+                     .merge(original_exception: original_exception.inspect)
           end
 
           ::Grape::Json.dump(result)
