@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'grape-active_model_serializers/error_formatter'
-require 'pry'
 
 describe Grape::ErrorFormatter::ActiveModelSerializers do
   subject { Grape::ErrorFormatter::ActiveModelSerializers }
