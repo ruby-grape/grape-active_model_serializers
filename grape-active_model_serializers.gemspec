@@ -16,8 +16,9 @@ Gem::Specification.new do |gem|
   gem.version       = Grape::ActiveModelSerializers::VERSION
   gem.licenses      = ['MIT']
 
-  gem.add_dependency 'grape', '>= 1.0.0'
+  gem.add_dependency 'grape', '>= 0.8.0'
   gem.add_dependency 'active_model_serializers', '>= 0.10.0'
+  gem.add_dependency 'multi_json', '~> 1.0'
 
   gem.add_development_dependency 'listen', '~> 3.0.7'
   gem.add_development_dependency 'rspec'
