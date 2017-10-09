@@ -16,9 +16,9 @@ module Grape
                      .merge(original_exception: original_exception.inspect)
           end
           if ::Grape.const_defined? :Json
-          	::Grape::Json.dump(result)
+            ::Grape::Json.dump(result)
           else
-          	::MultiJson.dump(result)
+            ::MultiJson.dump(result)
           end
         end
 
