@@ -5,7 +5,11 @@ module Grape
 
       class << self
         def call(message, backtrace, options = {}, env = nil, original_exception = nil)
-          result = wrap_message(present(message, env))
+          if respond_to? :present
+            result = wrap_message(present(message, env))
+          else
+            result = wrap_message(message)
+          end
 
           rescue_options = options[:rescue_options] || {}
           if rescue_options[:backtrace] && backtrace && !backtrace.empty?
