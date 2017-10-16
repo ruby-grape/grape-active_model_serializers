@@ -8,33 +8,44 @@ describe Grape::ErrorFormatter::ActiveModelSerializers do
   let(:env) { { 'api.endpoint' => app.endpoints.first } }
   let(:original_exception) { StandardError.new('oh noes!') }
 
-  let(:app) { Class.new(Grape::API) }
+  let(:app) {
+    Class.new(Grape::API) do |app|
+      app.format :json
+      app.formatter :jsonapi, Grape::Formatter::ActiveModelSerializers
+      app.error_formatter :jsonapi, Grape::ErrorFormatter::ActiveModelSerializers
+
+      app.namespace('space') do |ns|
+        ns.get('/', root: false) do
+          error!(message)
+        end
+      end
+    end
+  }
+  let(:foo) {
+    Class.new {
+      include ActiveModel::Model
+
+      attr_accessor :name
+
+      def initialize(attributes = {})
+        super
+        errors.add(:name, 'We don\'t like bears')
+      end
+    }
+  }
 
   before do
     ActiveModel::Serializer.config.adapter = :json_api
-    app.format :json
-    app.formatter :jsonapi, Grape::Formatter::ActiveModelSerializers
-    app.error_formatter :jsonapi, Grape::ErrorFormatter::ActiveModelSerializers
+  end
 
-    app.namespace('space') do |ns|
-      ns.get('/', root: false) do
-        error!(message)
-      end
-    end
+  after do
+    ActiveModel::Serializer.config.adapter = :json
   end
 
   describe '#call' do
     context 'message is an activemodel' do
       let(:message) {
-        class Foo
-          include ActiveModel::Model
-          attr_accessor :name
-          def initialize(attributes = {})
-            super
-            errors.add(:name, 'We don\'t like bears')
-          end
-        end
-        Foo.new(name: 'bar')
+        foo.new(name: 'bar')
       }
       it 'formats the error' do
         result = subject

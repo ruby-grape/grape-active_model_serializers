@@ -5,24 +5,21 @@ module Grape
 
       class << self
         def call(message, backtrace, options = {}, env = nil, original_exception = nil)
-          result = if respond_to? :present
-                     wrap_message(present(message, env))
-                   else
-                     wrap_message(message)
-                   end
+          message = present(message, env) if respond_to?(:present)
+          message = wrap_message(message)
 
           rescue_options = options[:rescue_options] || {}
           if rescue_options[:backtrace] && backtrace && !backtrace.empty?
-            result = result.merge(backtrace: backtrace)
+            message = message.merge(backtrace: backtrace)
           end
           if rescue_options[:original_exception] && original_exception
-            result = result
-                     .merge(original_exception: original_exception.inspect)
+            message = message
+                      .merge(original_exception: original_exception.inspect)
           end
           if ::Grape.const_defined? :Json
-            ::Grape::Json.dump(result)
+            ::Grape::Json.dump(message)
           else
-            ::MultiJson.dump(result)
+            ::MultiJson.dump(message)
           end
         end
 
