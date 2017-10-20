@@ -1,6 +1,7 @@
 require 'active_model_serializers'
 require 'grape'
 require 'grape-active_model_serializers/endpoint_extension'
+require 'grape-active_model_serializers/error_formatter'
 require 'grape-active_model_serializers/formatter'
 require 'grape-active_model_serializers/serializer_resolver'
 require 'grape-active_model_serializers/options_builder'
