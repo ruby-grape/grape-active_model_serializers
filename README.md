@@ -36,6 +36,12 @@ require 'grape-active_model_serializers'
 class API < Grape::API
   format :json
   formatter :json, Grape::Formatter::ActiveModelSerializers
+
+  # Serializes errors with ActiveModel::Serializer::ErrorSerializer if an ActiveModel.
+  # Serializer conforms to the adapter, ex: json, jsonapi.
+  # So an error formatted with a jsonapi formatter would render as per:
+  # http://jsonapi.org/format/#error-objects
+  error_formatter :json, Grape::Formatter::ActiveModelSerializers
 end
 ```
 
