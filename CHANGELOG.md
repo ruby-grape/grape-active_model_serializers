@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.5.3 (Next)
+
+* Your contribution here.
+
 ### 1.5.2 (March 14, 2018)
 
 * [#76](https://github.com/ruby-grape/grape-active_model_serializers/pull/76): Add custom error formatter - [@xn](https://github.com/xn).
