@@ -10,7 +10,7 @@ else
 end
 
 group :test do
-  gem 'sqlite3'
-  gem 'sequel', '~> 4.37', require: false
   gem 'ruby-grape-danger', '~> 0.1.0', require: false
+  gem 'sequel', '~> 4.37', require: false
+  gem 'sqlite3'
 end

@@ -7,7 +7,7 @@ module Grape
       end
 
       def options
-        @options ||= (
+        @options ||= begin
           options = endpoint_options
           options[:scope] = endpoint unless options.key?(:scope)
           options.merge!(default_root_options) unless options.key?(:root)
@@ -15,7 +15,7 @@ module Grape
           options.merge!(adapter_options)
           options.merge!(extra_options)
           options
-        )
+        end
       end
 
       private

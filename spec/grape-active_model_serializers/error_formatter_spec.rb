@@ -4,7 +4,7 @@ require 'grape-active_model_serializers/error_formatter'
 describe Grape::ErrorFormatter::ActiveModelSerializers do
   subject { Grape::ErrorFormatter::ActiveModelSerializers }
   let(:backtrace) { ['Line:1'] }
-  let(:options) { Hash.new }
+  let(:options) { {} }
   let(:env) { { 'api.endpoint' => app.endpoints.first } }
   let(:original_exception) { StandardError.new('oh noes!') }
 
