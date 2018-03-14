@@ -50,11 +50,9 @@ module Grape
       resources
     end
 
-    def default_serializer_options
-    end
+    def default_serializer_options; end
 
-    def url_options
-    end
+    def url_options; end
   end
 
   Endpoint.send(:include, EndpointExtension)
