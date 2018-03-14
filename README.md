@@ -18,7 +18,7 @@ See [UPGRADING](UPGRADING.md) if you're upgrading from a previous version.
 ## Dependencies
 
 * >= Ruby v2.2
-* >= [grape](https://github.com/intridea/grape) v0.8.0
+* >= [grape](https://github.com/ruby-grape/grape) v0.8.0
 * >= [active_model_serializers](https://github.com/rails-api/active_model_serializers) v0.10.0
 
 ## Usage
@@ -283,4 +283,4 @@ See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## History
 
-Structured and based upon [grape-rabl](https://github.com/LTe/grape-rabl).
+Structured and based upon [grape-rabl](https://github.com/ruby-grape/grape-rabl).
