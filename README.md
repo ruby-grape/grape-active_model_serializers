@@ -17,9 +17,9 @@ See [UPGRADING](UPGRADING.md) if you're upgrading from a previous version.
 
 ## Dependencies
 
-* >= Ruby v2.2
-* >= [grape](https://github.com/ruby-grape/grape) v0.8.0
-* >= [active_model_serializers](https://github.com/rails-api/active_model_serializers) v0.10.0
+* &gt;= Ruby v2.2
+* &gt;= [grape](https://github.com/ruby-grape/grape) v0.8.0
+* &gt;= [active_model_serializers](https://github.com/rails-api/active_model_serializers) v0.10.0
 
 ## Usage
 
