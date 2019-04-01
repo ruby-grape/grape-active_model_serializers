@@ -1,33 +1,31 @@
 language: ruby
 
-sudo: false
-
 matrix:
   include:
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       script:
         - bundle exec danger
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.8.0
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.9.0
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.10.1
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.12.0
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.13.0
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.14.0
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.15.0
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=0.16.2
-    - rvm: 2.5.0
+    - rvm: 2.5.5
       env: GRAPE_VERSION=HEAD
-    - rvm: 2.4.3
-    - rvm: 2.3.6
-    - rvm: 2.2.9
+    - rvm: 2.4.6
+    - rvm: 2.3.8
+    - rvm: 2.2.10
     - rvm: rbx-2
     - rvm: jruby-19mode
     - rvm: ruby-head
