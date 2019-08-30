@@ -52,6 +52,18 @@ describe Grape::ActiveModelSerializers::SerializerResolver do
         expect(serializer).to be_kind_of(serializer_class)
       end
 
+      context 'specified nil by options' do
+        let(:options) {
+          super().merge(
+            serializer: nil
+          )
+        }
+
+        it 'returns nil' do
+          expect(serializer).to be_nil
+        end
+      end
+
       context 'each serializer' do
         let(:options) {
           super().except(:serializer).merge(

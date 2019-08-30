@@ -3,6 +3,7 @@
 ### 1.5.3 (Next)
 
 * Your contribution here.
+* [#92](https://github.com/ruby-grape/grape-active_model_serializers/pull/92): Fix: accept nil serializer - [@mateusnava](https://github.com/mateusnava).
 
 ### 1.5.2 (March 14, 2018)
 
