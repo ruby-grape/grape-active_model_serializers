@@ -18,8 +18,8 @@ describe Grape::Formatter::ActiveModelSerializers do
             {
               user: {
                 first_name: 'JR',
-                last_name:  'HE',
-                email:      'jrhe@github.com'
+                last_name: 'HE',
+                email: 'jrhe@github.com'
               }
             }
           end

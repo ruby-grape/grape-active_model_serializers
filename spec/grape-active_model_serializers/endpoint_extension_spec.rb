@@ -5,7 +5,7 @@ describe 'Grape::EndpointExtension' do
     subject do
       Grape::Endpoint.new(
         Grape::Util::InheritableSetting.new,
-        path:   '/',
+        path: '/',
         method: 'foo'
       )
     end
@@ -27,7 +27,7 @@ describe 'Grape::EndpointExtension' do
 
   describe '#render' do
     let(:env) { {} }
-    let(:env_key) {}
+    let(:env_key) { nil }
 
     before do
       allow(subject).to receive(:env).and_return(env)

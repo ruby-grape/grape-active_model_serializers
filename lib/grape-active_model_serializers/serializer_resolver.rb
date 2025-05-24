@@ -7,7 +7,7 @@ module Grape
       end
 
       def serializer
-        serializer_class.new(resource, serializer_options) if serializer_class
+        serializer_class&.new(resource, serializer_options)
       end
 
       private
@@ -16,6 +16,7 @@ module Grape
 
       def serializer_class
         return @serializer_class if defined?(@serializer_class)
+
         @serializer_class = resource_defined_class
         @serializer_class ||= collection_class
         @serializer_class ||= options[:serializer]
@@ -55,12 +56,14 @@ module Grape
 
       def namespace_inferred_class
         return nil unless options.key?(:for)
+
         namespace = options[:for].to_s.deconstantize
         "#{namespace}::#{resource_serializer_klass}".safe_constantize
       end
 
       def version_inferred_class
         return nil unless options.key?(:version)
+
         "#{version}::#{resource_serializer_klass}".safe_constantize
       end
 

@@ -1,0 +1,36 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - ruby-version: 3.4.4
+            command: bundle exec danger
+
+          - ruby-version: 3.4.4
+            command: bundle exec rake
+          - ruby-version: 3.3.8
+            command: bundle exec rake
+          - ruby-version: 3.2.8
+            command: bundle exec rake
+          - ruby-version: 3.1.7
+            command: bundle exec rake
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+      - name: Install dependencies
+        run: bundle install --jobs 4 --retry 3
+      - name: Run command
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ${{ matrix.command }}
