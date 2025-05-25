@@ -1,9 +1,5 @@
 name: CI
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
+on: [push, pull_request]
 
 jobs:
   danger:
@@ -15,10 +11,11 @@ jobs:
           ruby-version: 3.4.4
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
-      - name: Run danger
-        env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bundle exec danger
+      - name: Run Danger
+        run: |
+            # the token is public, has public_repo scope and belongs to the grape-bot user owned by @dblock, this is ok
+            TOKEN=$(echo -n Z2hwX2lYb0dPNXNyejYzOFJyaTV3QUxUdkNiS1dtblFwZTFuRXpmMwo= | base64 --decode)
+            DANGER_GITHUB_API_TOKEN=$TOKEN bundle exec danger --verbose
 
   test:
     runs-on: ubuntu-latest
