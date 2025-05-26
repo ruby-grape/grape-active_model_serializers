@@ -15,8 +15,8 @@ describe Grape::ActiveModelSerializers::SerializerResolver do
   let(:options) {
     {
       serializer: options_serializer_class, # options defined
-      for:        V4::UsersApi,             # namespace inference
-      version:    'v5'                      # version inference
+      for: V4::UsersApi, # namespace inference
+      version: 'v5' # version inference
     }
   }
   # resource defined

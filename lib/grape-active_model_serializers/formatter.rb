@@ -1,6 +1,6 @@
 module Grape
   module Formatter
-    module ActiveModelSerializers
+    class ActiveModelSerializers
       class << self
         def call(resource, env)
           options = build_options(resource, env)

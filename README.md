@@ -1,9 +1,29 @@
+# Table of Contents
+
+- [Grape::ActiveModelSerializers](#grapeactivemodelserializers)
+  - [Installation](#installation)
+  - [Dependencies](#dependencies)
+  - [Usage](#usage)
+    - [Require grape-active_model_serializers](#require-grape-active_model_serializers)
+    - [Tell your API to use Grape::Formatter::ActiveModelSerializers](#tell-your-api-to-use-grapeformatteractivemodelserializers)
+    - [Writing Serializers](#writing-serializers)
+    - [Serializers are inferred by active_record model names](#serializers-are-inferred-by-active_record-model-names)
+    - [Array Roots](#array-roots)
+    - [API Versioning](#api-versioning)
+    - [Manually specifying serializer / adapter options](#manually-specifying-serializer--adapter-options)
+    - [Custom Metadata](#custom-metadata)
+    - [Default Serializer Options](#default-serializer-options)
+    - [Current User](#current-user)
+    - [Full Example](#full-example)
+  - [Contributing](#contributing)
+  - [History](#history)
+
 # Grape::ActiveModelSerializers
 
 Use [active_model_serializers](https://github.com/rails-api/active_model_serializers) with [Grape](https://github.com/intridea/grape)!
 
 [![Gem Version](https://badge.fury.io/rb/grape-active_model_serializers.svg)](https://badge.fury.io/rb/grape-active_model_serializers)
-[![Build Status](https://api.travis-ci.org/ruby-grape/grape-active_model_serializers.svg)](http://travis-ci.org/ruby-grape/grape-active_model_serializers) [![Code Climate](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers.svg)](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers)
+[![Build Status](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/ci.yml/badge.svg)](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/ci.yml) [![Code Climate](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers.svg)](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers)
 
 ## Installation
 
@@ -17,8 +37,8 @@ See [UPGRADING](UPGRADING.md) if you're upgrading from a previous version.
 
 ## Dependencies
 
-* &gt;= Ruby v2.2
-* &gt;= [grape](https://github.com/ruby-grape/grape) v0.8.0
+* &gt;= Ruby v3.1
+* &gt;= [grape](https://github.com/ruby-grape/grape) v2.3.0
 * &gt;= [active_model_serializers](https://github.com/rails-api/active_model_serializers) v0.10.0
 
 ## Usage

@@ -32,6 +32,7 @@ module Grape
         def serialization_scope
           return unless _serialization_scope
           return unless respond_to?(_serialization_scope, true)
+
           send(_serialization_scope)
         end
       end
@@ -55,5 +56,5 @@ module Grape
     def url_options; end
   end
 
-  Endpoint.send(:include, EndpointExtension)
+  Endpoint.include EndpointExtension
 end

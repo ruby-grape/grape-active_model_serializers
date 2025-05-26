@@ -42,8 +42,8 @@ describe Grape::ActiveModelSerializers do
       app.get('/home') do
         User.new(
           first_name: 'JR',
-          last_name:  'HE',
-          email:      'contact@jrhe.co.uk'
+          last_name: 'HE',
+          email: 'contact@jrhe.co.uk'
         )
       end
     end
@@ -60,17 +60,17 @@ describe Grape::ActiveModelSerializers do
     app.get('/users') do
       user = User.new(
         first_name: 'JR',
-        last_name:  'HE',
-        email:      'contact@jrhe.co.uk'
+        last_name: 'HE',
+        email: 'contact@jrhe.co.uk'
       )
       [user, user]
     end
 
     get '/users'
     expect(subject).to eq(
-      '{"users":['\
-        '{"first_name":"JR","last_name":"HE"},'\
-        '{"first_name":"JR","last_name":"HE"}'\
+      '{"users":[' \
+      '{"first_name":"JR","last_name":"HE"},' \
+      '{"first_name":"JR","last_name":"HE"}' \
       ']}'
     )
   end
@@ -83,8 +83,8 @@ describe Grape::ActiveModelSerializers do
 
       get '/home'
       expect(subject).to eq(
-        '{"blog_post":'\
-          '{"title":"Grape AM::S Rocks!","body":"Really, it does."}'\
+        '{"blog_post":' \
+        '{"title":"Grape AM::S Rocks!","body":"Really, it does."}' \
         '}'
       )
     end
@@ -93,16 +93,16 @@ describe Grape::ActiveModelSerializers do
       app.get('/blog_posts') do
         blog_post = BlogPost.new(
           title: 'Grape AM::S Rocks!',
-          body:  'Really, it does.'
+          body: 'Really, it does.'
         )
         [blog_post, blog_post]
       end
 
       get '/blog_posts'
       expect(subject).to eq(
-        '{"blog_posts":['\
-          '{"title":"Grape AM::S Rocks!","body":"Really, it does."},'\
-          '{"title":"Grape AM::S Rocks!","body":"Really, it does."}'\
+        '{"blog_posts":[' \
+        '{"title":"Grape AM::S Rocks!","body":"Really, it does."},' \
+        '{"title":"Grape AM::S Rocks!","body":"Really, it does."}' \
         ']}'
       )
     end
@@ -132,9 +132,9 @@ describe Grape::ActiveModelSerializers do
 
       get '/admin/jeff'
       expect(subject).to eq(
-        '{"admin":['\
-          '{"first_name":"Jeff","last_name":null},'\
-          '{"first_name":"Jeff","last_name":null}'\
+        '{"admin":[' \
+        '{"first_name":"Jeff","last_name":null},' \
+        '{"first_name":"Jeff","last_name":null}' \
         ']}'
       )
     end
@@ -149,9 +149,9 @@ describe Grape::ActiveModelSerializers do
 
       get '/people'
       expect(subject).to eq(
-        '{"people":['\
-          '{"first_name":"Jeff","last_name":null},'\
-          '{"first_name":"Jeff","last_name":null}'\
+        '{"people":[' \
+        '{"first_name":"Jeff","last_name":null},' \
+        '{"first_name":"Jeff","last_name":null}' \
         ']}'
       )
     end

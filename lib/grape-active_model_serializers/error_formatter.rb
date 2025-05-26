@@ -1,8 +1,6 @@
 module Grape
   module ErrorFormatter
-    module ActiveModelSerializers
-      extend Base
-
+    class ActiveModelSerializers < Base
       class << self
         def call(message, backtrace, options = {}, env = nil, original_exception = nil)
           message = present(message, env) if respond_to?(:present)
