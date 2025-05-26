@@ -12,7 +12,7 @@ describe Grape::ActiveModelSerializers::OptionsBuilder do
       let(:env) { super().merge('ams_meta' => meta_options) }
       let(:meta_options) {
         {
-          meta:     meta,
+          meta: meta,
           meta_key: meta_key
         }
       }

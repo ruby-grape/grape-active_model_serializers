@@ -15,7 +15,7 @@ Bundler/DuplicatedGem:
 
 # Offense count: 1
 Metrics/AbcSize:
-  Max: 17
+  Max: 18
 
 # Offense count: 23
 # Configuration parameters: CountComments, ExcludedMethods.
@@ -63,5 +63,9 @@ Style/GuardClause:
 # Offense count: 2
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
 # URISchemes: http, https
-Metrics/LineLength:
+Layout/LineLength:
   Max: 87
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - spec/integration/sequel_spec.rb

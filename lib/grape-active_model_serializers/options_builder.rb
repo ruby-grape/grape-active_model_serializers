@@ -73,6 +73,7 @@ module Grape
       def extra_options
         options = env['ams_extra'] || {}
         return options if options.is_a?(Hash)
+
         raise 'Extra options must be a hash'
       end
     end

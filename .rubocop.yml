@@ -4,6 +4,10 @@ AllCops:
   Exclude:
     - Guardfile
     - grape-active_model_serializers.gemspec
+  NewCops: enable
 
 Style/BlockDelimiters:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
   Enabled: false

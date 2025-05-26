@@ -15,4 +15,4 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
 end
 
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].sort.each { |f| require f }
