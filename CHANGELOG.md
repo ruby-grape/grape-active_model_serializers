@@ -1,10 +1,9 @@
 ## Changelog
 
-### 2.0.0 (Next)
+### 2.0.0 (2025/06/02)
 
 * [#96](https://github.com/ruby-grape/grape-active_model_serializers/pull/96): Add compatibility for Grape 2.3 - [@samsonjs](https://github.com/samsonjs).
 * [#98](https://github.com/ruby-grape/grape-active_model_serializers/pull/98): Out with Travis CI, in with GitHub Actions - [@samsonjs](https://github.com/samsonjs).
-* Your contribution here.
 
 ### 1.5.2 (2018/03/14)
 
