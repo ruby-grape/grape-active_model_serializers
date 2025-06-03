@@ -11,12 +11,12 @@ bundle install
 rake
 ```
 
-Check that the last build succeeded in [Travis CI](https://travis-ci.org/ruby-grape/grape-active_model_serializers) for all supported platforms.
+Check that the last build succeeded in [GitHub Actions](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/ci.yml) for all supported platforms.
 
 Change "Next Release" in [CHANGELOG.md](CHANGELOG.md) to the new version.
 
 ```
-### 0.7.2 (February 6, 2014)
+### 0.7.2 (2014/02/06)
 ```
 
 Remove the line with "Your contribution here.", since there will be no more contributions to this release.
