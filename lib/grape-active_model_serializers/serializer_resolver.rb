@@ -17,12 +17,14 @@ module Grape
       def serializer_class
         return @serializer_class if defined?(@serializer_class)
 
-        @serializer_class = resource_defined_class
-        @serializer_class ||= collection_class
-        @serializer_class ||= options[:serializer]
-        @serializer_class ||= namespace_inferred_class
-        @serializer_class ||= version_inferred_class
-        @serializer_class ||= resource_serializer_class
+        return nil if options.key?(:serializer) && options[:serializer].nil?
+
+        @serializer_class = resource_defined_class ||
+                            collection_class ||
+                            options[:serializer] ||
+                            namespace_inferred_class ||
+                            version_inferred_class ||
+                            resource_serializer_class
       end
 
       def serializer_options
