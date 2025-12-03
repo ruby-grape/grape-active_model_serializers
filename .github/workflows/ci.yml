@@ -22,6 +22,7 @@ jobs:
     strategy:
       matrix:
         ruby-version: [3.4.4, 3.3.8, 3.2.8, 3.1.7]
+        grape-version: ['~> 2.3.0', '~> 3.0']
     steps:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
@@ -29,5 +30,9 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
       - name: Install dependencies
         run: bundle install --jobs 4 --retry 3
+        env:
+          GRAPE_VERSION: ${{ matrix.grape-version }}
       - name: Run tests
         run: bundle exec rake
+        env:
+          GRAPE_VERSION: ${{ matrix.grape-version }}

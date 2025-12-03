@@ -49,11 +49,7 @@ module Grape
       end
 
       def innermost_scope
-        if endpoint.respond_to?(:namespace_stackable)
-          endpoint.namespace_stackable(:namespace).last
-        else
-          endpoint.settings.peek[:namespace]
-        end
+        endpoint.inheritable_setting.namespace_stackable[:namespace]&.last
       end
 
       def meta_options
