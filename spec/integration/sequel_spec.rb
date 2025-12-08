@@ -22,6 +22,7 @@ describe 'Sequel Integration' do
   let!(:model) {
     SequelUser = Class.new(Sequel::Model(:users)) do
       include ActiveModel::Serialization
+
       def self.model_name
         'User'
       end
