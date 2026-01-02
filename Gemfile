@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-case version = ENV['GRAPE_VERSION'] || '~> 2.3.0'
+case version = ENV['GRAPE_VERSION'] || '~> 3.0.0'
 when 'HEAD'
   gem 'grape', github: 'intridea/grape'
 else
