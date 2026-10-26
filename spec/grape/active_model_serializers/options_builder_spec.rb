@@ -8,6 +8,20 @@ describe Grape::ActiveModelSerializers::OptionsBuilder do
   context '#options' do
     let(:options) { resolver.options }
 
+    context 'array root' do
+      let(:resource) { [User.new] }
+      let(:api) {
+        Class.new(Grape::API) do
+          get(%i[people users]) { nil }
+        end
+      }
+      let(:env) { { 'api.endpoint' => api.endpoints.first } }
+
+      it 'uses the first route name without a format suffix' do
+        expect(options[:root]).to eq('people')
+      end
+    end
+
     context 'meta options' do
       let(:env) { super().merge('ams_meta' => meta_options) }
       let(:meta_options) {

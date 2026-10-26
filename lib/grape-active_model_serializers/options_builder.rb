@@ -27,9 +27,18 @@ module Grape
           endpoint.default_serializer_options || {},
           endpoint.namespace_options,
           endpoint.route_options,
+          endpoint_metadata,
           endpoint.options,
           endpoint.options.fetch(:route_options)
         ].reduce(:merge)
+      end
+
+      def endpoint_metadata
+        options = {}
+        options[:for] = endpoint.api if endpoint.respond_to?(:api)
+        version = endpoint.routes.first.version
+        options[:version] = version if version
+        options
       end
 
       def endpoint
@@ -44,7 +53,7 @@ module Grape
         if innermost_scope
           { root: innermost_scope.space }
         else
-          { root: endpoint.options[:path].first.to_s.split('/').last }
+          { root: endpoint.routes.first.origin.to_s.split('/').last }
         end
       end
 

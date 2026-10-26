@@ -1,9 +1,11 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
+  TargetRubyVersion: 3.1
   Exclude:
     - Guardfile
     - grape-active_model_serializers.gemspec
+    - vendor/**/*
   NewCops: enable
 
 Style/BlockDelimiters:

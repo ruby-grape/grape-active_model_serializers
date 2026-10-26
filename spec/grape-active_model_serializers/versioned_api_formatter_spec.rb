@@ -37,13 +37,13 @@ describe Grape::Formatter::ActiveModelSerializers do
     describe '.fetch_serializer' do
       let(:user) { User.new(first_name: 'John', email: 'j.doe@internet.com') }
 
-      let(:params) { { path: '/', method: 'foo', version: 'v1', root: false } }
-      if Grape::Util.const_defined?('InheritableSetting')
-        let(:setting) { Grape::Util::InheritableSetting.new }
-      else
-        let(:setting) { {} }
-      end
-      let(:endpoint) { Grape::Endpoint.new(setting, params) }
+      let(:api) {
+        Class.new(Grape::API) do
+          version 'v1', using: :param
+          get('/', root: false) { nil }
+        end
+      }
+      let(:endpoint) { api.endpoints.first }
       let(:env) { { 'api.endpoint' => endpoint } }
 
       before do
@@ -56,7 +56,7 @@ describe Grape::Formatter::ActiveModelSerializers do
         end
       end
 
-      let(:options) { described_class.build_options(user, env) }
+      let(:options) { described_class.build_options(user, env).except(:for) }
       subject { described_class.fetch_serializer(user, options) }
 
       let(:instance_options) { subject.send(:instance_options) }
@@ -75,6 +75,26 @@ describe Grape::Formatter::ActiveModelSerializers do
       it 'should read serializer options like "root"' do
         expect(options).to include(:root)
       end
+    end
+  end
+
+  describe 'with a mounted API namespace' do
+    let(:app) {
+      Class.new(Grape::API) do
+        format :json
+        formatter :json, Grape::Formatter::ActiveModelSerializers
+        mount V4::UsersApi
+      end
+    }
+
+    before do
+      ActiveModelSerializers.config.adapter = :json
+    end
+
+    it 'infers the serializer from the mounted API' do
+      get '/users/1'
+      expect(JSON.parse(last_response.body).fetch('user'))
+        .to include('email' => nil)
     end
   end
 end

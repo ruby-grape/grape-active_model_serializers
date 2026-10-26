@@ -4,6 +4,9 @@
 
 * Your contribution here.
 
+* [#104](https://github.com/ruby-grape/grape-active_model_serializers/pull/104): Modernize CI for Ruby 3.1-4.0 and Grape 2.x-4.x, update RuboCop, and replace the embedded Danger credential with tokenless report/comment workflows - [@dblock](https://github.com/dblock).
+* [#104](https://github.com/ruby-grape/grape-active_model_serializers/pull/104): Fix Grape 4 collection roots and API/version serializer inference using route metadata instead of removed endpoint options - [@dblock](https://github.com/dblock).
+
 ### 2.0.1 (2025/12/08)
 
 * [#92](https://github.com/ruby-grape/grape-active_model_serializers/pull/92): Fix: accept nil serializer - [@mateusnava](https://github.com/mateusnava).
