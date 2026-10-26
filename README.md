@@ -12,6 +12,7 @@
     - [API Versioning](#api-versioning)
     - [Manually specifying serializer / adapter options](#manually-specifying-serializer--adapter-options)
     - [Error Serialization](#error-serialization)
+    - [JSON:API Included Resources](#jsonapi-included-resources)
     - [Custom Metadata](#custom-metadata)
     - [Default Serializer Options](#default-serializer-options)
     - [Current User](#current-user)
@@ -256,6 +257,50 @@ end
 ```
 
 With the `:json_api` adapter, validation failures return HTTP 422 with a [JSON:API errors array](https://jsonapi.org/format/#error-objects). The response shape follows the configured ActiveModelSerializers adapter, not the Grape format name: the example still uses `format :json`. Setting the global adapter also affects successful responses.
+
+### JSON:API Included Resources
+
+A resource identifier under `relationships` is linkage, not the related resource's attributes. To include those attributes in a top-level `included` array, declare the relationship in the serializer and pass an AMS `include` option with the `:json_api` adapter:
+
+```ruby
+class AuthorSerializer < ActiveModel::Serializer
+  attributes :id, :name
+end
+
+class ArticleSerializer < ActiveModel::Serializer
+  attributes :id, :title
+  belongs_to :author, serializer: AuthorSerializer
+end
+
+get '/articles/:id' do
+  article = Article.find(params[:id])
+  render article, adapter: :json_api, include: 'author'
+end
+```
+
+With the Grape AMS formatter configured and `format :json`, an article with an author produces a compound document such as:
+
+```json
+{
+  "data": {
+    "id": "1",
+    "type": "articles",
+    "attributes": { "title": "Hello" },
+    "relationships": {
+      "author": { "data": { "id": "2", "type": "authors" } }
+    }
+  },
+  "included": [
+    { "id": "2", "type": "authors", "attributes": { "name": "Jane" } }
+  ]
+}
+```
+
+Related records need identifiers and serializers defining the attributes to expose. Without `include: 'author'`, the JSON:API adapter can emit relationship linkage without adding the author's full resource to `included`.
+
+You can also specify `adapter: :json_api, include: 'author'` as route options, or return them from `default_serializer_options`. Nested relationships use paths such as `include: 'comments.author'`; each relationship must be declared in its serializer.
+
+ActiveRecord's `includes(:author)` preloads database associations but does not select AMS included resources. Likewise, an `?include=author` query parameter is not automatically forwarded to AMS; validate allowed relationships and explicitly pass the selected include option. See the [AMS include documentation](https://github.com/rails-api/active_model_serializers/blob/0-10-stable/docs/general/adapters.md#include-option).
 
 ### Custom Metadata
 

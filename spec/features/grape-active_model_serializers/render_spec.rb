@@ -115,3 +115,78 @@ describe '#render' do
     end
   end
 end
+
+describe 'JSON:API included resources' do
+  let(:app) { Class.new(Grape::API) }
+  let(:render_options) { { adapter: :json_api } }
+  let(:route_options) { {} }
+  let(:collection) { false }
+  let(:document) { JSON.parse(last_response.body) }
+  let(:author_resource) {
+    { 'id' => '2', 'type' => 'authors', 'attributes' => { 'name' => 'Jane' } }
+  }
+
+  before do
+    stub_const('JsonApiAuthor', Class.new(ActiveModelSerializers::Model) do
+      attributes :id, :name
+    end)
+    stub_const('JsonApiArticle', Class.new(ActiveModelSerializers::Model) do
+      attributes :id, :title, :author
+    end)
+    stub_const('JsonApiAuthorSerializer', Class.new(ActiveModel::Serializer) do
+      type 'authors'
+      attributes :id, :name
+    end)
+    stub_const('JsonApiArticleSerializer', Class.new(ActiveModel::Serializer) do
+      type 'articles'
+      attributes :id, :title
+      belongs_to :author, serializer: JsonApiAuthorSerializer
+    end)
+
+    ActiveModelSerializers.config.adapter = :json
+    app.format :json
+    app.formatter :json, Grape::Formatter::ActiveModelSerializers
+    author = JsonApiAuthor.new(id: 2, name: 'Jane')
+    article = JsonApiArticle.new(id: 1, title: 'Hello', author: author)
+    articles = [article, JsonApiArticle.new(id: 3, title: 'More', author: author)]
+    resource = collection ? articles : article
+    options = render_options
+    app.get('/articles', **route_options) { render resource, options }
+
+    get '/articles'
+  end
+
+  it 'emits relationship linkage without implicitly including the resource' do
+    expect(document.fetch('data').fetch('relationships')).to eq(
+      'author' => { 'data' => { 'id' => '2', 'type' => 'authors' } }
+    )
+    expect(document).not_to have_key('included')
+  end
+
+  context 'render inclusion' do
+    let(:render_options) { super().merge(include: 'author') }
+
+    it 'includes the related resource and its attributes' do
+      expect(document.fetch('included')).to eq([author_resource])
+    end
+
+    context 'a collection' do
+      let(:collection) { true }
+
+      it 'includes a shared related resource only once' do
+        ids = document.fetch('data').map { |article| article.fetch('id') }
+        expect(ids).to eq(%w[1 3])
+        expect(document.fetch('included')).to eq([author_resource])
+      end
+    end
+  end
+
+  context 'route options' do
+    let(:route_options) { { adapter: :json_api, include: 'author' } }
+    let(:render_options) { {} }
+
+    it 'selects the adapter and included resource without render overrides' do
+      expect(document.fetch('included')).to eq([author_resource])
+    end
+  end
+end
