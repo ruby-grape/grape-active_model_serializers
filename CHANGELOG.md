@@ -4,6 +4,7 @@
 
 * Your contribution here.
 
+* [#109](https://github.com/ruby-grape/grape-active_model_serializers/pull/109): Document the optional third-party Swagger model parser, response model configuration, and schema limitations - [@dblock](https://github.com/dblock).
 * [#104](https://github.com/ruby-grape/grape-active_model_serializers/pull/104): Modernize CI for Ruby 3.1-4.0 and Grape 2.x-4.x, update RuboCop, and replace the embedded Danger credential with tokenless report/comment workflows - [@dblock](https://github.com/dblock).
 * [#104](https://github.com/ruby-grape/grape-active_model_serializers/pull/104): Fix Grape 4 collection roots and API/version serializer inference using route metadata instead of removed endpoint options - [@dblock](https://github.com/dblock).
 
