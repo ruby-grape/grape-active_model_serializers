@@ -44,7 +44,7 @@ module Grape
         :meta, :meta_key
       )
       env['ams_adapter'] = options.slice(
-        :adapter, :serializer, :each_serializer, :include,
+        :adapter, :serializer, :each_serializer, :include, :root,
         :fields, :key_transform, :links, :namespace
       )
       env['ams_extra'] = options[:extra]
