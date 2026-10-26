@@ -241,13 +241,26 @@ end
 
 ### Default Serializer Options
 
+Define `default_serializer_options` as a Grape helper to supply options for each request. AMS 0.10 uses `fields` for attribute filtering, not the legacy `only`/`except` options; `exclude` is not a supported filtering option either.
+
 ```ruby
 helpers do
   def default_serializer_options
-    { only: params[:only], except: params[:except] }
+    { fields: params[:fields] }
   end
 end
+
+params do
+  optional :fields, type: [String]
+end
+get '/users' do
+  User.all
+end
 ```
+
+For the `:attributes` and `:json` adapters, a request such as `/users?fields[]=first_name` selects only `first_name` from the serializer's attributes. Omitting `fields` leaves the attributes unchanged. Namespace and route options override defaults with the same key.
+
+The `:json_api` adapter instead expects a hash keyed by resource type, for example `{ fields: { users: [:first_name, :last_name] } }`. See the [AMS JSON:API adapter documentation](https://github.com/rails-api/active_model_serializers/blob/0-10-stable/docs/general/adapters.md#json-api) for adapter-specific options.
 
 ### Current User
 

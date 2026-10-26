@@ -4,6 +4,7 @@
 
 * Your contribution here.
 
+* [#106](https://github.com/ruby-grape/grape-active_model_serializers/pull/106): Update default serializer options documentation to use AMS 0.10 field filtering and cover request-level defaults and overrides - [@dblock](https://github.com/dblock).
 * [#104](https://github.com/ruby-grape/grape-active_model_serializers/pull/104): Modernize CI for Ruby 3.1-4.0 and Grape 2.x-4.x, update RuboCop, and replace the embedded Danger credential with tokenless report/comment workflows - [@dblock](https://github.com/dblock).
 * [#104](https://github.com/ruby-grape/grape-active_model_serializers/pull/104): Fix Grape 4 collection roots and API/version serializer inference using route metadata instead of removed endpoint options - [@dblock](https://github.com/dblock).
 
