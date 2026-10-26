@@ -22,8 +22,9 @@
 
 Use [active_model_serializers](https://github.com/rails-api/active_model_serializers) with [Grape](https://github.com/intridea/grape)!
 
-[![Gem Version](https://badge.fury.io/rb/grape-active_model_serializers.svg)](https://badge.fury.io/rb/grape-active_model_serializers)
-[![Build Status](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml/badge.svg)](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml) [![Code Climate](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers.svg)](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers)
+[![Gem Version](https://img.shields.io/gem/v/grape-active_model_serializers.svg)](https://rubygems.org/gems/grape-active_model_serializers)
+[![Coverage Status](https://coveralls.io/repos/github/ruby-grape/grape-active_model_serializers/badge.svg?branch=master)](https://coveralls.io/github/ruby-grape/grape-active_model_serializers?branch=master)
+[![Build Status](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml/badge.svg?branch=master&event=push)](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml?query=branch%3Amaster)
 
 ## Installation
 

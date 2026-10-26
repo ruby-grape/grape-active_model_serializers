@@ -47,6 +47,8 @@ GRAPE_VERSION='~> 4.0' bundle exec rake
 
 Use `~> 2.3.0`, `~> 2.4.0`, `~> 3.0.0`, or `~> 3.0` for the other tested versions. Without an override, Bundler selects the latest Grape compatible with your Ruby. `GRAPE_VERSION=HEAD` selects Grape's upstream default branch.
 
+Spec runs generate `coverage/lcov/grape-active_model_serializers.lcov` with SimpleCov. CI merges every stable Ruby/Grape job into one Coveralls report using the built-in GitHub token; the experimental ruby-head job does not publish coverage.
+
 Danger runs without a personal access token or repository secrets. The read-only pull-request workflow generates a report artifact; a separate `workflow_run` workflow posts the report using GitHub's automatically provided `GITHUB_TOKEN`, without checking out or executing pull-request code with write permissions.
 
 ## Write Tests
