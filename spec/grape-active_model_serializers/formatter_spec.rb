@@ -29,13 +29,12 @@ describe Grape::Formatter::ActiveModelSerializers do
   describe '.fetch_serializer' do
     let(:user) { User.new(first_name: 'John') }
 
-    let(:params) { { path: '/', method: 'foo', root: false } }
-    if Grape::Util.const_defined?('InheritableSetting')
-      let(:setting) { Grape::Util::InheritableSetting.new }
-    else
-      let(:setting) { {} }
-    end
-    let(:endpoint) { Grape::Endpoint.new(setting, params) }
+    let(:api) {
+      Class.new(Grape::API) do
+        get('/', root: false) { nil }
+      end
+    }
+    let(:endpoint) { api.endpoints.first }
 
     let(:env) { { 'api.endpoint' => endpoint } }
 

@@ -1,4 +1,4 @@
-# Contributing to Grape-Swagger
+# Contributing to Grape::ActiveModelSerializers
 
 This project is work of [many contributors](https://github.com/ruby-grape/grape-active_model_serializers/graphs/contributors).
 You're encouraged to submit [pull requests](https://github.com/ruby-grape/grape-active_model_serializers/pulls),
@@ -35,6 +35,19 @@ Ensure that you can build the project and run tests.
 bundle install
 bundle exec rake
 ```
+
+CI retains Grape 2.3 and 3.0 coverage on Ruby 3.2, 3.3, 3.4, and 4.0, adds the documented Ruby 3.1 minimum with Grape 2.3, and tests Grape 2.4, the latest 3.x, and 4.x on Ruby 3.3. Grape 4.x also runs on Ruby 3.4, Ruby 4.0, and ruby-head (allowed to fail). Ruby 3.1 uses Ubuntu 22.04; newer Rubies use the latest Ubuntu runner. Lint runs separately.
+
+Use `GRAPE_VERSION` to select a Grape requirement, resolving the bundle again when switching:
+
+```sh
+GRAPE_VERSION='~> 4.0' bundle update
+GRAPE_VERSION='~> 4.0' bundle exec rake
+```
+
+Use `~> 2.3.0`, `~> 2.4.0`, `~> 3.0.0`, or `~> 3.0` for the other tested versions. Without an override, Bundler selects the latest Grape compatible with your Ruby. `GRAPE_VERSION=HEAD` selects Grape's upstream default branch.
+
+Danger runs without a personal access token or repository secrets. The read-only pull-request workflow generates a report artifact; a separate `workflow_run` workflow posts the report using GitHub's automatically provided `GITHUB_TOKEN`, without checking out or executing pull-request code with write permissions.
 
 ## Write Tests
 
@@ -115,7 +128,7 @@ git push origin my-feature-branch -f
 
 ## Check on Your Pull Request
 
-Go back to your pull request after a few minutes and see whether it passed muster with Travis-CI. Everything should look green, otherwise fix issues and amend your commit as described above.
+Go back to your pull request after a few minutes and check its GitHub Actions results. Everything should look green, otherwise fix issues and amend your commit as described above.
 
 ## Be Patient
 
