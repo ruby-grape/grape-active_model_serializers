@@ -86,14 +86,22 @@ In this case, as User objects are being returned, grape-active_model_serializers
 
 ### Array Roots
 
-When serializing an array, the array root is set to the innermost namespace name if there is one, otherwise it is set to the route name.
+Root wrapping depends on the ActiveModelSerializers adapter. The default `:attributes` adapter ignores `root` and returns a bare array. Select the `:json` adapter to wrap the collection in a named root:
+
+```ruby
+ActiveModelSerializers.config.adapter = :json
+```
+
+Grape's `format :json` selects the response format, not the AMS adapter. The `:json_api` adapter follows JSON:API's `data` structure instead of using an arbitrary root.
+
+With the `:json` adapter, the default array root is the innermost namespace name if there is one, otherwise it is the route name.
 
 In the following API the array root is `users`.
 
 ```ruby
 namespace :users do
-  get ":id" do
-    @user = User.find(params[:id])
+  get '/' do
+    User.all
   end
 end
 ```
@@ -102,9 +110,45 @@ In the following example the array root is `people`.
 
 ```ruby
 get "people" do
-  @user = User.all
+  User.all
 end
 ```
+
+For collections, set `root` on a namespace or route to override the default. Inner namespace roots override outer ones, and a route option takes precedence over its namespace:
+
+```ruby
+namespace :users, root: 'members' do
+  get '/' do
+    User.all
+  end
+
+  get '/recent', root: 'recent_members' do
+    User.all
+  end
+end
+```
+
+Pass `root` to `render` to override namespace and route options for that response, including empty collections:
+
+```ruby
+get '/people', root: 'people' do
+  render User.all, adapter: :json, each_serializer: UserSerializer, root: 'members'
+end
+```
+
+This returns an object such as `{ "members": [{ "first_name": "Jane", "last_name": "Doe" }] }`; an empty collection returns `{ "members": [] }`.
+
+In AMS 0.10, `root: false` does not remove the `:json` adapter's envelope. To return a bare array for one response, choose the `:attributes` adapter:
+
+```ruby
+get '/people' do
+  render User.all, adapter: :attributes, each_serializer: UserSerializer
+end
+```
+
+Return the model collection rather than a manually constructed `ActiveModel::Serializer::CollectionSerializer`. The formatter constructs the serializer and adapter; options such as `root` only affect the final response when the adapter handles them.
+
+Namespace roots apply only to collections. Single-object responses retain the root inferred by AMS from the serializer or model, even inside a namespace with an explicit `root`. Set `root` on the route or pass it to `render` to override a single-object root explicitly.
 
 ### API Versioning
 

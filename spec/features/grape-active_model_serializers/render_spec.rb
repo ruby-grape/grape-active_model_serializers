@@ -115,3 +115,115 @@ describe '#render' do
     end
   end
 end
+
+describe 'single-object and collection roots' do
+  let(:app) { Class.new(Grape::API) }
+  let(:resources) { [User.new(first_name: 'Jane', last_name: 'Doe')] }
+  let(:route_options) { {} }
+  let(:render_options) { {} }
+
+  before do
+    ActiveModelSerializers.config.adapter = :json
+    app.format :json
+    app.formatter :json, Grape::Formatter::ActiveModelSerializers
+
+    resource = resources
+    options = render_options
+    route_settings = route_options
+    app.namespace :directory, root: 'directory_members' do
+      namespace :users, root: 'members' do
+        get '/people', **route_settings do
+          render resource, options
+        end
+      end
+    end
+
+    get '/directory/users/people'
+  end
+
+  it 'uses the innermost namespace root' do
+    expect(JSON.parse(last_response.body)).to eq(
+      'members' => [{ 'first_name' => 'Jane', 'last_name' => 'Doe' }]
+    )
+  end
+
+  context 'route options' do
+    let(:route_options) { { root: 'recent_members' } }
+
+    it 'overrides the namespace root' do
+      expect(JSON.parse(last_response.body)).to eq(
+        'recent_members' => [{ 'first_name' => 'Jane', 'last_name' => 'Doe' }]
+      )
+    end
+  end
+
+  context 'render options' do
+    let(:route_options) { { root: 'recent_members' } }
+    let(:render_options) { { root: 'selected_members' } }
+
+    it 'overrides the route and namespace roots' do
+      expect(JSON.parse(last_response.body)).to eq(
+        'selected_members' => [{ 'first_name' => 'Jane', 'last_name' => 'Doe' }]
+      )
+    end
+
+    context 'an empty collection' do
+      let(:resources) { [] }
+
+      it 'keeps the explicit root' do
+        expect(JSON.parse(last_response.body)).to eq('selected_members' => [])
+      end
+    end
+  end
+
+  context 'root is false' do
+    let(:render_options) { { root: false } }
+
+    it 'uses the AMS-inferred root rather than removing the JSON envelope' do
+      expect(JSON.parse(last_response.body)).to eq(
+        'users' => [{ 'first_name' => 'Jane', 'last_name' => 'Doe' }]
+      )
+    end
+  end
+
+  context 'the attributes adapter' do
+    let(:render_options) { { adapter: :attributes, root: 'ignored' } }
+
+    it 'returns a bare array regardless of the root option' do
+      expect(JSON.parse(last_response.body)).to eq(
+        [{ 'first_name' => 'Jane', 'last_name' => 'Doe' }]
+      )
+    end
+  end
+
+  context 'a single object' do
+    let(:resources) { User.new(first_name: 'Jane', last_name: 'Doe') }
+
+    it 'keeps the inferred model root despite explicit namespace roots' do
+      expect(JSON.parse(last_response.body)).to eq(
+        'user' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+      )
+    end
+
+    context 'route options' do
+      let(:route_options) { { root: 'person' } }
+
+      it 'honors an explicit route root' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'person' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+        )
+      end
+    end
+
+    context 'render options' do
+      let(:route_options) { { root: 'person' } }
+      let(:render_options) { { root: 'selected_person' } }
+
+      it 'overrides the route root' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'selected_person' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+        )
+      end
+    end
+  end
+end
