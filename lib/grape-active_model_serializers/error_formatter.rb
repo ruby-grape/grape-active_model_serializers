@@ -2,7 +2,24 @@ module Grape
   module ErrorFormatter
     class ActiveModelSerializers < Base
       class << self
-        def call(message, backtrace, options = {}, env = nil, original_exception = nil)
+        def call(*args, **kwargs)
+          return super if kwargs.key?(:error)
+
+          call_with_positional_arguments(*args, **kwargs)
+        end
+
+        private
+
+        def format_structured_message(message)
+          if ::Grape.const_defined? :Json
+            ::Grape::Json.dump(message)
+          else
+            ::MultiJson.dump(message)
+          end
+        end
+
+        def call_with_positional_arguments(message, backtrace, options = {},
+                                           env = nil, original_exception = nil)
           message = present(message, env) if respond_to?(:present)
           message = wrap_message(message)
 
@@ -14,14 +31,8 @@ module Grape
             message = message
                       .merge(original_exception: original_exception.inspect)
           end
-          if ::Grape.const_defined? :Json
-            ::Grape::Json.dump(message)
-          else
-            ::MultiJson.dump(message)
-          end
+          format_structured_message(message)
         end
-
-        private
 
         def wrap_message(message)
           if active_model?(message)

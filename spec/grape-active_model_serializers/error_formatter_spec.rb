@@ -11,12 +11,12 @@ describe Grape::ErrorFormatter::ActiveModelSerializers do
   let(:app) {
     Class.new(Grape::API) do |app|
       app.format :json
-      app.formatter :jsonapi, Grape::Formatter::ActiveModelSerializers
-      app.error_formatter :jsonapi, Grape::ErrorFormatter::ActiveModelSerializers
+      app.formatter :json, Grape::Formatter::ActiveModelSerializers
+      app.error_formatter :json, Grape::ErrorFormatter::ActiveModelSerializers
 
       app.namespace('space') do |ns|
         ns.get('/', root: false) do
-          error!(message)
+          error!(message, 422)
         end
       end
     end
@@ -87,6 +87,29 @@ describe Grape::ErrorFormatter::ActiveModelSerializers do
 
         expect(json_hash == { 'error' => message }).to eq(true)
       end
+    end
+  end
+
+  describe 'API validation errors' do
+    let(:message) { foo.new(name: 'bar') }
+
+    it 'returns a JSON:API error document with the requested HTTP status' do
+      model = message
+      app.helpers do
+        define_method(:message) { model }
+      end
+
+      get '/space/'
+
+      expect(last_response.status).to eq(422)
+      expect(JSON.parse(last_response.body)).to eq(
+        'errors' => [
+          {
+            'source' => { 'pointer' => '/data/attributes/name' },
+            'detail' => 'We don\'t like bears'
+          }
+        ]
+      )
     end
   end
 end
