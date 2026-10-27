@@ -10,6 +10,63 @@ describe '#render' do
     app.formatter :json, Grape::Formatter::ActiveModelSerializers
   end
 
+  describe 'default_serializer_options' do
+    let(:resource) { User.new(first_name: 'Jane', last_name: 'Doe') }
+    let(:query) { { fields: ['first_name'] } }
+    let(:route_options) { {} }
+
+    before do
+      app.helpers do
+        def default_serializer_options
+          { fields: params[:fields] }
+        end
+      end
+      app.params do
+        optional :fields, type: [String]
+      end
+      model = resource
+      app.get('/users', **route_options) { model }
+
+      get '/users', query
+    end
+
+    it 'filters attributes using request-specific defaults' do
+      expect(JSON.parse(last_response.body)).to eq(
+        'user' => { 'first_name' => 'Jane' }
+      )
+    end
+
+    context 'a collection' do
+      let(:resource) { [super()] }
+
+      it 'filters each resource without changing the collection root' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'users' => [{ 'first_name' => 'Jane' }]
+        )
+      end
+    end
+
+    context 'no requested fields' do
+      let(:query) { {} }
+
+      it 'keeps all serializer attributes' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'user' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+        )
+      end
+    end
+
+    context 'route options' do
+      let(:route_options) { { fields: [:last_name] } }
+
+      it 'overrides the default field selection' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'user' => { 'last_name' => 'Doe' }
+        )
+      end
+    end
+  end
+
   def get_resource_with(meta)
     url = "/#{SecureRandom.hex}"
     app.get(url) do

@@ -44,7 +44,7 @@ describe Grape::Formatter::ActiveModelSerializers do
       end
 
       def endpoint.default_serializer_options
-        { only: :only, except: :except }
+        { fields: [:first_name] }
       end
     end
 
@@ -60,8 +60,7 @@ describe Grape::Formatter::ActiveModelSerializers do
     end
 
     it 'should read default serializer options' do
-      expect(instance_options[:only]).to eq(:only)
-      expect(instance_options[:except]).to eq(:except)
+      expect(instance_options[:fields]).to eq([:first_name])
     end
 
     it 'should read serializer options like "root"' do
