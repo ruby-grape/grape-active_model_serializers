@@ -4,6 +4,7 @@
 
 * Your contribution here.
 
+* [#107](https://github.com/ruby-grape/grape-active_model_serializers/pull/107): Honor namespace and `render` collection roots without changing inferred single-object roots; document adapter behavior, root precedence, and unwrapped arrays - [@dblock](https://github.com/dblock).
 * [#110](https://github.com/ruby-grape/grape-active_model_serializers/pull/110): Add SimpleCov LCOV reports, merged stable-matrix Coveralls reporting, and a coverage badge; remove the obsolete Code Climate badge and refresh gem/CI badge links - [@dblock](https://github.com/dblock).
 * [#109](https://github.com/ruby-grape/grape-active_model_serializers/pull/109): Document the optional third-party Swagger model parser, response model configuration, and schema limitations - [@dblock](https://github.com/dblock).
 * [#106](https://github.com/ruby-grape/grape-active_model_serializers/pull/106): Update default serializer options documentation to use AMS 0.10 field filtering and cover request-level defaults and overrides - [@dblock](https://github.com/dblock).
