@@ -26,11 +26,19 @@ module Grape
         [
           endpoint.default_serializer_options || {},
           endpoint.namespace_options,
+          namespace_root_options,
           endpoint.route_options,
           endpoint_metadata,
           endpoint.options,
           endpoint.options.fetch(:route_options)
         ].reduce(:merge)
+      end
+
+      def namespace_root_options
+        scopes = endpoint.inheritable_setting.namespace_stackable[:namespace] || []
+        scopes.each_with_object({}) do |scope, options|
+          options.merge!(scope.options.slice(:root))
+        end
       end
 
       def endpoint_metadata
