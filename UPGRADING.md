@@ -1,3 +1,34 @@
+### Upgrading to v3.0.0
+
+#### Explicit namespace roots apply to single objects
+
+With the AMS `:json` adapter, an explicit namespace `root` now applies consistently to both collections and single objects. This intentionally changes single-object response keys that previously ignored the namespace root:
+
+```ruby
+namespace :users, root: 'members' do
+  get('/')    { User.all }
+  get('/:id') { User.find(params[:id]) }
+end
+```
+
+The collection uses `{ "members": [...] }`. In 3.0 the single-object response also uses `"members"`, returning `{ "members": {...} }` rather than the previous `{ "user": {...} }`. Roots are literal: a single-object response does not automatically singularize `"members"`.
+
+To preserve an existing single-object response key, override the namespace root on that route:
+
+```ruby
+namespace :users, root: 'members' do
+  get '/:id', root: 'user' do
+    User.find(params[:id])
+  end
+end
+```
+
+Alternatively, pass `root: 'user'` to `render` or remove the namespace root and specify collection roots on individual collection routes. Update API clients and response schemas if adopting the new namespace-derived key instead.
+
+Root precedence is `render` > route > innermost explicit namespace root > outer namespace roots > default serializer options. Without an explicit root, single objects retain AMS model/serializer inference; collections retain the innermost namespace or route-name default.
+
+The change is limited to explicit namespace roots. It does not change serializer inference, merge other namespace options differently, or alter adapter semantics. The `:attributes` adapter still omits envelopes, the `:json_api` adapter keeps its standard document structure, and `root: false` still does not remove a `:json` envelope.
+
 ### Upgrading to v1.5.0
 
 #### ASM v0.10.x support added, v0.9.x support dropped
