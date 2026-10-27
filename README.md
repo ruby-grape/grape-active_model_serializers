@@ -11,6 +11,7 @@
     - [Array Roots](#array-roots)
     - [API Versioning](#api-versioning)
     - [Manually specifying serializer / adapter options](#manually-specifying-serializer--adapter-options)
+    - [Error Serialization](#error-serialization)
     - [Custom Metadata](#custom-metadata)
     - [Default Serializer Options](#default-serializer-options)
     - [Current User](#current-user)
@@ -60,11 +61,7 @@ class API < Grape::API
   format :json
   formatter :json, Grape::Formatter::ActiveModelSerializers
 
-  # Serializes errors with ActiveModel::Serializer::ErrorSerializer if an ActiveModel.
-  # Serializer conforms to the adapter, ex: json, jsonapi.
-  # So an error formatted with a jsonapi formatter would render as per:
-  # http://jsonapi.org/format/#error-objects
-  error_formatter :json, Grape::Formatter::ActiveModelSerializers
+  error_formatter :json, Grape::ErrorFormatter::ActiveModelSerializers
 end
 ```
 
@@ -229,6 +226,35 @@ class UserSerializer
   end
 end
 ```
+
+### Error Serialization
+
+Use `Grape::ErrorFormatter::ActiveModelSerializers` for errors, not `Grape::Formatter::ActiveModelSerializers`, which formats successful responses. The error formatter serializes an invalid model with `ActiveModel::Serializer::ErrorSerializer`.
+
+Pass the model itself to `error!`, not `model.errors`. A failed ActiveRecord `update` returns `false`; it does not invoke the error formatter automatically.
+
+```ruby
+ActiveModelSerializers.config.adapter = :json_api
+
+class API < Grape::API
+  format :json
+  formatter :json, Grape::Formatter::ActiveModelSerializers
+  error_formatter :json, Grape::ErrorFormatter::ActiveModelSerializers
+
+  params do
+    requires :id, type: String
+    optional :first_name, type: String
+  end
+  patch '/users/:id' do
+    user = User.find(params[:id])
+    attributes = declared(params, include_missing: false).except(:id)
+    error!(user, 422) unless user.update(attributes)
+    user
+  end
+end
+```
+
+With the `:json_api` adapter, validation failures return HTTP 422 with a [JSON:API errors array](https://jsonapi.org/format/#error-objects). The response shape follows the configured ActiveModelSerializers adapter, not the Grape format name: the example still uses `format :json`. Setting the global adapter also affects successful responses.
 
 ### Custom Metadata
 
