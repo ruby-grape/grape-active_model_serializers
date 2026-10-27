@@ -16,6 +16,7 @@
     - [Default Serializer Options](#default-serializer-options)
     - [Current User](#current-user)
     - [Full Example](#full-example)
+    - [Swagger Documentation](#swagger-documentation)
   - [Contributing](#contributing)
   - [History](#history)
 
@@ -338,6 +339,47 @@ end
 
 API.new.get "/home" # => '{ user: { first_name: "JR", last_name: "HE" } }'
 ```
+
+### Swagger Documentation
+
+Swagger generation is optional and provided by [grape-swagger](https://github.com/ruby-grape/grape-swagger), not by this gem. The third-party [grape-swagger-active_model_serializers](https://github.com/kawamoto/grape-swagger-active_model_serializers) gem registers an AMS model parser, analogous to the Entity and Representable integrations.
+
+Add the documentation dependencies to your application's Gemfile:
+
+```ruby
+gem 'grape-active_model_serializers'
+gem 'grape-swagger'
+gem 'grape-swagger-active_model_serializers'
+```
+
+Load the parser before generating the documentation and identify the serializer as the endpoint's success model:
+
+```ruby
+require 'grape-active_model_serializers'
+require 'grape-swagger-active_model_serializers'
+
+class UserSerializer < ActiveModel::Serializer
+  attributes :id, :name
+end
+
+class API < Grape::API
+  format :json
+  formatter :json, Grape::Formatter::ActiveModelSerializers
+
+  desc 'Return a user', success: UserSerializer
+  get '/users/:id' do
+    render User.find(params[:id]), serializer: UserSerializer, adapter: :attributes
+  end
+
+  add_swagger_documentation
+end
+```
+
+`GET /swagger_doc` returns the Swagger/OpenAPI 2.0 document with a generated definition for the serializer's attributes. `success: UserSerializer` selects the documentation model; it does not configure response serialization, so keep the runtime serializer and adapter consistent with the schema.
+
+The example uses the `:attributes` adapter to match a flat object schema. A serializer definition alone does not describe a `:json` root envelope, JSON:API's `data`/`included` structure, or relationships. Attribute types depend on the parser's model metadata and untyped attributes may default to strings. Inspect the generated definitions and use [custom model parsers](https://github.com/ruby-grape/grape-swagger#custom-model-parsers) or explicit response models when your output needs a different schema.
+
+The parser is maintained separately, brings its own dependencies, and is not required for normal serialization. Check its documentation and compatibility when choosing versions.
 
 ## Contributing
 
