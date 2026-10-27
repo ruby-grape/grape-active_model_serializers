@@ -12,6 +12,8 @@ end
 group :test do
   gem 'rack-test'
   gem 'sequel', '~> 5.91', require: false
+  gem 'simplecov', require: false
+  gem 'simplecov-lcov', require: false
   gem 'sqlite3'
 end
 
