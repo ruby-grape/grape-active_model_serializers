@@ -11,6 +11,7 @@
     - [Array Roots](#array-roots)
     - [API Versioning](#api-versioning)
     - [Manually specifying serializer / adapter options](#manually-specifying-serializer--adapter-options)
+    - [Error Serialization](#error-serialization)
     - [Custom Metadata](#custom-metadata)
     - [Default Serializer Options](#default-serializer-options)
     - [Current User](#current-user)
@@ -23,8 +24,9 @@
 
 Use [active_model_serializers](https://github.com/rails-api/active_model_serializers) with [Grape](https://github.com/intridea/grape)!
 
-[![Gem Version](https://badge.fury.io/rb/grape-active_model_serializers.svg)](https://badge.fury.io/rb/grape-active_model_serializers)
-[![Build Status](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml/badge.svg)](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml) [![Code Climate](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers.svg)](https://codeclimate.com/github/ruby-grape/grape-active_model_serializers)
+[![Gem Version](https://img.shields.io/gem/v/grape-active_model_serializers.svg)](https://rubygems.org/gems/grape-active_model_serializers)
+[![Coverage Status](https://coveralls.io/repos/github/ruby-grape/grape-active_model_serializers/badge.svg?branch=master)](https://coveralls.io/github/ruby-grape/grape-active_model_serializers?branch=master)
+[![Build Status](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml/badge.svg?branch=master&event=push)](https://github.com/ruby-grape/grape-active_model_serializers/actions/workflows/test.yml?query=branch%3Amaster)
 
 ## Installation
 
@@ -60,11 +62,7 @@ class API < Grape::API
   format :json
   formatter :json, Grape::Formatter::ActiveModelSerializers
 
-  # Serializes errors with ActiveModel::Serializer::ErrorSerializer if an ActiveModel.
-  # Serializer conforms to the adapter, ex: json, jsonapi.
-  # So an error formatted with a jsonapi formatter would render as per:
-  # http://jsonapi.org/format/#error-objects
-  error_formatter :json, Grape::Formatter::ActiveModelSerializers
+  error_formatter :json, Grape::ErrorFormatter::ActiveModelSerializers
 end
 ```
 
@@ -230,6 +228,35 @@ class UserSerializer
 end
 ```
 
+### Error Serialization
+
+Use `Grape::ErrorFormatter::ActiveModelSerializers` for errors, not `Grape::Formatter::ActiveModelSerializers`, which formats successful responses. The error formatter serializes an invalid model with `ActiveModel::Serializer::ErrorSerializer`.
+
+Pass the model itself to `error!`, not `model.errors`. A failed ActiveRecord `update` returns `false`; it does not invoke the error formatter automatically.
+
+```ruby
+ActiveModelSerializers.config.adapter = :json_api
+
+class API < Grape::API
+  format :json
+  formatter :json, Grape::Formatter::ActiveModelSerializers
+  error_formatter :json, Grape::ErrorFormatter::ActiveModelSerializers
+
+  params do
+    requires :id, type: String
+    optional :first_name, type: String
+  end
+  patch '/users/:id' do
+    user = User.find(params[:id])
+    attributes = declared(params, include_missing: false).except(:id)
+    error!(user, 422) unless user.update(attributes)
+    user
+  end
+end
+```
+
+With the `:json_api` adapter, validation failures return HTTP 422 with a [JSON:API errors array](https://jsonapi.org/format/#error-objects). The response shape follows the configured ActiveModelSerializers adapter, not the Grape format name: the example still uses `format :json`. Setting the global adapter also affects successful responses.
+
 ### Custom Metadata
 
 ```ruby
@@ -242,13 +269,26 @@ end
 
 ### Default Serializer Options
 
+Define `default_serializer_options` as a Grape helper to supply options for each request. AMS 0.10 uses `fields` for attribute filtering, not the legacy `only`/`except` options; `exclude` is not a supported filtering option either.
+
 ```ruby
 helpers do
   def default_serializer_options
-    { only: params[:only], except: params[:except] }
+    { fields: params[:fields] }
   end
 end
+
+params do
+  optional :fields, type: [String]
+end
+get '/users' do
+  User.all
+end
 ```
+
+For the `:attributes` and `:json` adapters, a request such as `/users?fields[]=first_name` selects only `first_name` from the serializer's attributes. Omitting `fields` leaves the attributes unchanged. Namespace and route options override defaults with the same key.
+
+The `:json_api` adapter instead expects a hash keyed by resource type, for example `{ fields: { users: [:first_name, :last_name] } }`. See the [AMS JSON:API adapter documentation](https://github.com/rails-api/active_model_serializers/blob/0-10-stable/docs/general/adapters.md#json-api) for adapter-specific options.
 
 ### Current User
 
