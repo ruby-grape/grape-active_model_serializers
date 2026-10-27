@@ -1,5 +1,11 @@
 ## Changelog
 
+### 3.0.0 (Next)
+
+* Your contribution here.
+
+* [#111](https://github.com/ruby-grape/grape-active_model_serializers/pull/111): Apply explicit namespace roots consistently to single objects and collections, intentionally changing single-object response keys; document migration and preserve adapter behavior - [@dblock](https://github.com/dblock).
+
 ### 2.0.2 (Next)
 
 * Your contribution here.

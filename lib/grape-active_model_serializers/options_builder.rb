@@ -35,8 +35,6 @@ module Grape
       end
 
       def namespace_root_options
-        return {} unless resource.respond_to?(:to_ary)
-
         scopes = endpoint.inheritable_setting.namespace_stackable[:namespace] || []
         scopes.each_with_object({}) do |scope, options|
           options.merge!(scope.options.slice(:root))

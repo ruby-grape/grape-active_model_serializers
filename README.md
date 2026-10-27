@@ -9,6 +9,7 @@
     - [Writing Serializers](#writing-serializers)
     - [Serializers are inferred by active_record model names](#serializers-are-inferred-by-active_record-model-names)
     - [Array Roots](#array-roots)
+    - [Single-Object Roots](#single-object-roots)
     - [API Versioning](#api-versioning)
     - [Manually specifying serializer / adapter options](#manually-specifying-serializer--adapter-options)
     - [Error Serialization](#error-serialization)
@@ -114,7 +115,7 @@ get "people" do
 end
 ```
 
-For collections, set `root` on a namespace or route to override the default. Inner namespace roots override outer ones, and a route option takes precedence over its namespace:
+Set `root` on a namespace or route to override the inferred root for collections or single objects. Inner namespace roots override outer ones, and a route option takes precedence over its namespace:
 
 ```ruby
 namespace :users, root: 'members' do
@@ -148,7 +149,21 @@ end
 
 Return the model collection rather than a manually constructed `ActiveModel::Serializer::CollectionSerializer`. The formatter constructs the serializer and adapter; options such as `root` only affect the final response when the adapter handles them.
 
-Namespace roots apply only to collections. Single-object responses retain the root inferred by AMS from the serializer or model, even inside a namespace with an explicit `root`. Set `root` on the route or pass it to `render` to override a single-object root explicitly.
+### Single-Object Roots
+
+Starting in 3.0, explicit namespace roots apply to single-object responses as well as collections, with the same precedence: `render` overrides the route, the route overrides the innermost explicit namespace root, and inner namespace roots override outer ones.
+
+```ruby
+namespace :users, root: 'members' do
+  get '/:id' do
+    User.find(params[:id])
+  end
+end
+```
+
+With the `:json` adapter, this returns `{ "members": { "first_name": "Jane", "last_name": "Doe" } }`. The root is used literally, without singularizing it for a single object. In 2.x the namespace root was ignored for this response, which used `"user"` instead. See [UPGRADING](UPGRADING.md#upgrading-to-v300) for migration options.
+
+Without an explicit root, AMS continues to infer the single-object root from the serializer or model, not the namespace or route name. Adapter behavior is unchanged: `:attributes` returns an unwrapped object and `:json_api` retains its standard document structure.
 
 ### API Versioning
 

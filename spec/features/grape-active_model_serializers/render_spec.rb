@@ -119,6 +119,8 @@ end
 describe 'single-object and collection roots' do
   let(:app) { Class.new(Grape::API) }
   let(:resources) { [User.new(first_name: 'Jane', last_name: 'Doe')] }
+  let(:outer_namespace_options) { { root: 'directory_members' } }
+  let(:inner_namespace_options) { { root: 'members' } }
   let(:route_options) { {} }
   let(:render_options) { {} }
 
@@ -130,8 +132,10 @@ describe 'single-object and collection roots' do
     resource = resources
     options = render_options
     route_settings = route_options
-    app.namespace :directory, root: 'directory_members' do
-      namespace :users, root: 'members' do
+    outer_options = outer_namespace_options
+    inner_options = inner_namespace_options
+    app.namespace :directory, **outer_options do
+      namespace :users, **inner_options do
         get '/people', **route_settings do
           render resource, options
         end
@@ -199,10 +203,51 @@ describe 'single-object and collection roots' do
   context 'a single object' do
     let(:resources) { User.new(first_name: 'Jane', last_name: 'Doe') }
 
-    it 'keeps the inferred model root despite explicit namespace roots' do
+    it 'uses the same explicit namespace root as collections' do
       expect(JSON.parse(last_response.body)).to eq(
-        'user' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+        'members' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
       )
+    end
+
+    context 'an inner namespace without a root' do
+      let(:inner_namespace_options) { {} }
+
+      it 'inherits the outer namespace root' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'directory_members' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+        )
+      end
+    end
+
+    context 'no explicit namespace roots' do
+      let(:outer_namespace_options) { {} }
+      let(:inner_namespace_options) { {} }
+
+      it 'keeps the inferred model root' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'user' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+        )
+      end
+    end
+
+    context 'an inner namespace root is false' do
+      let(:inner_namespace_options) { { root: false } }
+
+      it 'uses the AMS-inferred root instead of inheriting the outer root' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'user' => { 'first_name' => 'Jane', 'last_name' => 'Doe' }
+        )
+      end
+    end
+
+    context 'the attributes adapter' do
+      let(:render_options) { { adapter: :attributes } }
+
+      it 'keeps the response unwrapped despite the namespace root' do
+        expect(JSON.parse(last_response.body)).to eq(
+          'first_name' => 'Jane', 'last_name' => 'Doe'
+        )
+      end
     end
 
     context 'route options' do
